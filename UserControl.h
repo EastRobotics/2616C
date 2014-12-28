@@ -100,7 +100,7 @@ void TeleOp()
 				LiftHeight("Up", 127, Skyrise7);
 			}
 
-			// Skyrise intake - controlled by right joystick.
+			// Skyrise intake - controlled by right shoulder buttons.
 			// Up = in. Down = out.
 
 			if(vexRT[Btn8U] == 1)
