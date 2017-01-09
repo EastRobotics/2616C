@@ -16,7 +16,10 @@ task clawPos() {
 			if(abs(claw1.desiredPos - currentPos) > claw1.tolerance) {
 				if(motor[clawL] == 0){
 					claw = ((claw1.desiredPos - currentPos > 0) ? claw1.speed : -claw1.speed);
-			}}else{claw=0;}
+				}
+			} else {
+				claw=0;
+			}
 			wait1Msec(20);
 			if(vexRT[Btn7L] & vexRT[Btn8R]) {
 				clawMan = false;
@@ -30,7 +33,9 @@ task clawPos() {
 			if(vexRT[Btn7L] == 1 & vexRT[Btn8R] == 1) {
 				clawMan = true;
 				while(vexRT[Btn7L] == 1 & vexRT[Btn8R] == 1)
-				{}
+				{
+
+				}
 			}
 		}
 	}
