@@ -23,6 +23,8 @@
 #define lift liftLeft = liftRight
 #define claw motor[clawL] = motor[clawR]
 #define driveoff BR = BL = FL = FR = 0
+#define wide 2350
+#define closed 1200
 #include "behaviours.c"
 bool vectordrive = true;
 task Drive() {
