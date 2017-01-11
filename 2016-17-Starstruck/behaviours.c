@@ -1,6 +1,6 @@
 #define currentPos SensorValue[clawManiple]
 #define wide 2350
-#define closed 800
+#define closed 1200
 typedef struct {
 	int tolerance;
 	int desiredPos;

@@ -140,7 +140,7 @@ task usercontrol() {
     startTask(clawArm);
  //   startTask(clawGrasp);
 claw1.tolerance = 120;
-      claw1.speed = 40;
+      claw1.speed = 110;
       startTask(clawPos)
 	startTask(macroSelection);
 	startTask(incDecTolerance);
