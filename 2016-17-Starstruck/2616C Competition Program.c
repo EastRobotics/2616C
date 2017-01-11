@@ -77,33 +77,6 @@ task clawArm() {
         }
     }
 }
-task clawGrasp() {
-    while(true) {
-    	  writeDebugStreamLine("Claw = %d",SensorValue[clawManiple]);
-        switch(vexRT[Btn5U]) {
-        case 1:
-            claw = -127;
-            while(vexRT[Btn5U]){
-
-            }
-        case 0:
-            claw = 0;
-        }
-
-        switch(vexRT[Btn5D]) {
-        case 1:
-            claw = 127;
-            while(vexRT[Btn5D]){
-
-            }
-            break;
-        case 0:
-            claw = 0;
-            break;
-        }
-    }
-}
-
 void pre_auton() {
     bStopTasksBetweenModes = true;
    // SensorValue[clawManiple] = 0;
@@ -124,7 +97,7 @@ task autonomous() {
 							BR =  Y1 - X2 + X1;
 							FL = Y1 + X2 + X1;
 							BL =  -Y1 - X2 + X1;
-							Wait1Msec(3000);
+							wait1Msec(3000);
 							 Y1 = 127;
             	 X1 = vexRT[Ch4];
             	 X2 = vexRT[Ch1];
@@ -143,10 +116,7 @@ task usercontrol() {
  //   startTask(clawGrasp);
 claw1.tolerance = 120;
       claw1.speed = 110;
-      startTask(clawPos)
+      startTask(clawPos);
 	startTask(macroSelection);
 	startTask(incDecTolerance);
-	while(1==1){
-
-	}
 	}
