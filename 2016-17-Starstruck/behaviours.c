@@ -8,6 +8,12 @@ typedef struct {
 } clawManipulator;
 bool clawMan = true;
 clawManipulator claw1;
+typedef struct {
+int Y1;
+int X2;
+int drive1.X1;
+} drivestruct;
+drivestruct drive1;
 
 task clawPos() {
 	claw1.desiredPos = SensorValue[clawManiple];
@@ -31,19 +37,11 @@ task clawPos() {
 	}
 	if(!clawMan) {
 		if(vexRT[Btn5D]) {
-			claw = 63;
+			claw = claw1.speed;
 			} else if(vexRT[Btn5U]){
-			claw = -63;
+			claw = -claw1.speed;
 			} else {
 			claw = 0;
-		}
-		switch(vexRT[Btn5U]) {
-		case 1:
-			claw = -63;
-			break;
-		case 0:
-			claw = 0;
-			break;
 		}
 	}
 	wait1Msec(100);
@@ -82,4 +80,20 @@ task incDecTolerance() {
 		}
 		wait1Msec(100);
 	}
+}
+void spin(int angle) {
+	int gyroInitial = abs(SensorValue[gyro]);
+	int gyroDest = gyroInitial + angle;
+	int Y1, X2, X1;
+		X2 = 90;
+		Y1 = X1 = 0;
+		FR = -Y1 + X2 + X1;
+		BR =  Y1 - X2 + X1;
+		FL = Y1 + X2 + X1;
+		BL =  -Y1 - X2 + X1;
+
+	while(abs(SensorValue[gyro]) - gyroInitial < gyroInitial + angle) {
+
+	}
+	driveoff;
 }
