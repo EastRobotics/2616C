@@ -6,6 +6,8 @@ typedef struct {
 	int enabled;
 	int difference;
 } clawManipulator;
+bool clawMan = true;
+clawManipulator claw1;
 task clawPos() {
 	claw1.desiredPos = SensorValue[clawManiple];
 	while(true) {

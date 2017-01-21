@@ -3,20 +3,28 @@ typedef struct {
 	int angularDestination;
 	int transitionalDestination;
 	int transitionalCurrent;
-}driveParams;
+	int speed;
+	int directionalCoefficient;
+} driveParams;
 
+typedef struct {
+	int transitionalVectorX;
+	int transitionalVectorY;
+	int rotationalVector;
+} driveValues;
+bool vectordrive = true;
 task drive() {
 	while(true) {
 		switch(vectordrive) {
 		case true:
-
-			drive1.Y1 = vexRT[Ch3];
-			drive1.X1 = vexRT[Ch4];
-			drive1.X2 = vexRT[Ch1];
-			FR = -drive1.Y1 + drive1.X2 + drive1.X1;
-			BR =  drive1.Y1 - drive1.X2 + drive1.X1;
-			FL = drive1.Y1 + drive1.X2 + drive1.X1;
-			BL =  -drive1.Y1 - drive1.X2 + drive1.X1;
+			driveValues speeds;
+			speeds.transitionalVectorY = vexRT[Ch3];
+			speeds.transitionalVectorX = vexRT[Ch4];
+			speeds.rotationalVector = vexRT[Ch1];
+			FR = -speeds.transitionalVectorY + speeds.rotationalVector + speeds.transitionalVectorX;
+			BR =  speeds.transitionalVectorY - speeds.rotationalVector + speeds.transitionalVectorX;
+			FL = speeds.transitionalVectorY + speeds.rotationalVector + speeds.transitionalVectorX;
+			BL =  -speeds.transitionalVectorY - speeds.rotationalVector + speeds.transitionalVectorX;
 			if(vexRT[Btn8D]){
 				vectordrive = false;
 			}
@@ -30,13 +38,16 @@ task drive() {
 void driveRaw() {
 
 }
-driveParams strafe(char direction, int speed) {
+driveValues* strafe(driveParams dP) {
+	driveValues dV;
+	int direction = dP.directionalCoefficient;
 	switch(direction) {
 		case 'L':
-
+			dV.transitionalVectorX = 127;
 		break;
 		case 'R':
-
+			dV.transitionalVectorX = -127;
 		break;
 	}
+	return dV;
 }
