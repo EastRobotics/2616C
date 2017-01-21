@@ -14,15 +14,16 @@ task liftPos() {
 		if(vexRT[Btn7U] && vexRT[Btn8U]) {
 			liftMan = !liftMan;
 			lift = 0;
+			while(vexRT[Btn7U] & vexRT[Btn8U]) {}
 		}
-		while(vexRT[Btn7U] & vexRT[Btn8U]) {}
-		lift1.currentPos = SensorValue[clawManiple];
+
+		lift1.currentPos = SensorValue[liftPot];
 		lift1.difference = abs(lift1.desiredPos - lift1.currentPos);
 		writeDebugStreamLine(" D: %d | C: %d | Diff: %d | S: %d |", lift1.desiredPos, lift1.currentPos, lift1.difference, lift1.speed);
 		if(liftMan) {
 			if(lift1.difference > lift1.tolerance) {
 				if(motor[clawL] == 0){
-					claw = ((lift1.desiredPos - lift1.currentPos > 0) ? ( (lift1.difference > 250) ? lift1.speed : lift1.speed/2 ) : ((lift1.difference > 250) ? -lift1.speed : -lift1.speed/2 ));
+					lift = ((lift1.desiredPos - lift1.currentPos > 0) ? ( (lift1.difference > 250) ? -lift1.speed : -lift1.speed/2 ) : ((lift1.difference > 250) ? lift1.speed : lift1.speed/2 ));
 				}
 				} else {
 				claw = 0;

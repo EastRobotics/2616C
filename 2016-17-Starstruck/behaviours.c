@@ -19,7 +19,7 @@ task macroSelection() {
 			}
 		}
 		if(vexRT[Btn6U]) {
-			lift1.desiredPos = max;
+			lift1.desiredPos = CoG;
 			while(vexRT[Btn6U]) {
 			}
 		}

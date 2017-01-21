@@ -29,8 +29,9 @@
 #define driveoff BR = BL = FL = FR = 0
 #define wide 2350
 #define closed 1200
-//#define min
-//#define max
+#define min 300
+#define CoG 2300
+#define max
 #include "Gyro.c"
 #include "OdometryMouse.c"
 #include "clawBehaviors.c"
@@ -62,7 +63,7 @@ task Drive() {
 		}
 	}
 }
-task clawArm() {
+/*task clawArm() {
 	while(true){
 		switch(vexRT[Btn6U]) {
 		case 1:
@@ -88,7 +89,7 @@ task clawArm() {
 			break;
 		}
 	}
-}
+}*/
 void pre_auton() {
 	bStopTasksBetweenModes = true;
 	init_odometry(x_quad, y_quad);
@@ -120,11 +121,13 @@ task usercontrol() {
 	/*startTask(spin);
 	wait1Msec(5000);*/
 	startTask(Drive);
-	startTask(clawArm);
 	//   startTask(clawGrasp);
 	claw1.tolerance = 120;
 	claw1.speed = 110;
+	lift1.tolerance = 400;
+	lift1.speed = 40;
 	startTask(clawPos);
+	startTask(liftPos);
 	startTask(macroSelection);
 	startTask(incDecTolerance);
 }
