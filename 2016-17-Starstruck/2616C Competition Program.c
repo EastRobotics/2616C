@@ -29,8 +29,8 @@
 #define driveoff BR = BL = FL = FR = 0
 #define wide 2350
 #define closed 1200
-#define min 300
-#define CoG 2300
+#define min 350
+#define CoG 2000
 #define max
 #include "Gyro.c"
 #include "OdometryMouse.c"
@@ -122,10 +122,10 @@ task usercontrol() {
 	wait1Msec(5000);*/
 	startTask(Drive);
 	//   startTask(clawGrasp);
-	claw1.tolerance = 120;
-	claw1.speed = 110;
-	lift1.tolerance = 400;
-	lift1.speed = 40;
+	claw1.tolerance = 200;
+	claw1.speed = 90;
+	lift1.tolerance = 200;
+	lift1.speed = 100;
 	startTask(clawPos);
 	startTask(liftPos);
 	startTask(macroSelection);

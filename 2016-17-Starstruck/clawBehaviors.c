@@ -18,7 +18,7 @@ task clawPos() {
 		while(vexRT[Btn7L] & vexRT[Btn8R]) {}
 		claw1.currentPos = SensorValue[clawManiple];
 		claw1.difference = abs(claw1.desiredPos - claw1.currentPos);
-		writeDebugStreamLine(" D: %d | C: %d | Diff: %d | S: %d |", claw1.desiredPos, claw1.currentPos, claw1.difference, claw1.speed);
+	//	writeDebugStreamLine(" D: %d | C: %d | Diff: %d | S: %d |", claw1.desiredPos, claw1.currentPos, claw1.difference, claw1.speed);
 		if(clawMan) {
 			if(claw1.difference > claw1.tolerance) {
 				if(motor[clawL] == 0){

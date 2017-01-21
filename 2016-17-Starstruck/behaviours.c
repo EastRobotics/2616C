@@ -19,11 +19,14 @@ task macroSelection() {
 			}
 		}
 		if(vexRT[Btn6U]) {
+			lift1.tolerance =200;
 			lift1.desiredPos = CoG;
+
 			while(vexRT[Btn6U]) {
 			}
 		}
 		if(vexRT[Btn6D]) {
+			lift1.tolerance =300;
 			lift1.desiredPos = min;
 			while(vexRT[Btn6D]) {
 			}
