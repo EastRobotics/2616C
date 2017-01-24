@@ -8,14 +8,15 @@ task runGyro() {
 	int value;
 	float angle;
 	float offsetAngle;
+	int f = 0;
 	SensorType[gyro] = sensorNone;
 	wait1Msec(500);
 	SensorType[gyro]= sensorGyro;
-	wait10Msec(50);
+	wait1Msec(500);
 	realBias = SensorBias[gyro];
 	SensorBias[gyro] = SensorBias[gyro] - 1000;
 
-	wait10Msec(100);
+	wait1Msec(1000);
 
 	SensorScale[gyro] = 130;
 
@@ -27,8 +28,8 @@ task runGyro() {
 		angle = (value - offsetAngle) / 10.0;
 
 		// normalize into the range 0 - 360
-		if( angle < 0 )
-			angle += 360;
+		//if( angle < 0 )
+		//	angle += 360;
 
 		// put in global for display
 		gyro_angle = angle;
@@ -37,8 +38,9 @@ task runGyro() {
 		gyro_valid = true;
 
 		// Delay
-		wait1Msec( 20 );
-		//writeDebugStreamLine("Angle %f", gyro_angle);
+
+		wait1Msec(100);
+		//writeDebugStreamLine("Angle %f | %i", gyro_angle, f++);
 	}
 }
 /*task main(){

@@ -16,16 +16,17 @@ task liftPos() {
 			lift = 0;
 			while(vexRT[Btn7U] & vexRT[Btn8U]) {}
 		}
-
+    SensorValue[liftlight] = liftMan ? 1 : 0;
 		lift1.currentPos = SensorValue[liftPot];
 		lift1.difference = abs(lift1.desiredPos - lift1.currentPos);
-	//	writeDebugStreamLine(" Lift D: %d | C: %d | Diff: %d | S: %d |", lift1.desiredPos, lift1.currentPos, lift1.difference, lift1.speed);
+		//	writeDebugStreamLine(" Lift D: %d | C: %d | Diff: %d | S: %d |", lift1.desiredPos, lift1.currentPos, lift1.difference, lift1.speed);
 		if(liftMan) {
 			if(lift1.difference > lift1.tolerance) {
-				if(motor[liftLB] == 0){
+				if(motor[liftLB] == 0 || vexRT[Btn6U]) {
 					lift = ((lift1.desiredPos - lift1.currentPos > 0) ? ( (lift1.difference > lift1.tolerance + 250) ? -lift1.speed : -(lift1.speed)/2 ) : ((lift1.difference > lift1.tolerance + 250) ? lift1.speed : lift1.speed/2 ));
+
 				}
-				} else {
+				}else {
 				lift = 0;
 			}
 		}
@@ -40,4 +41,11 @@ task liftPos() {
 		}
 		wait1Msec(100);
 	}
+}
+void throwObjects() {
+	lift1.speed =127;
+	claw1.speed=127;
+	lift1.desiredPos = liftthrow;
+  while (lift1.currentPos <CoG-350){}
+  claw1.desiredPos = clawthrow;
 }

@@ -15,15 +15,16 @@ task clawPos() {
 			clawMan = !clawMan;
 			claw = 0;
 		}
+		SensorValue[clawlight] = clawMan ? 1 : 0;
 		while(vexRT[Btn7L] & vexRT[Btn8R]) {}
 		claw1.currentPos = SensorValue[clawManiple];
 		claw1.difference = abs(claw1.desiredPos - claw1.currentPos);
 	//	writeDebugStreamLine(" D: %d | C: %d | Diff: %d | S: %d |", claw1.desiredPos, claw1.currentPos, claw1.difference, claw1.speed);
 		if(clawMan) {
 			if(claw1.difference > claw1.tolerance) {
-				if(motor[clawL] == 0){
-					claw = ((claw1.desiredPos - claw1.currentPos > 0) ? ( (claw1.difference > 250) ? claw1.speed : claw1.speed/2 ) : ((claw1.difference > 250) ? -claw1.speed : -claw1.speed/2 ));
-				}
+		//		if(motor[clawL] == 0){
+					claw = (claw1.desiredPos - claw1.currentPos > 0) ? ( (claw1.difference > 250) ? claw1.speed : claw1.speed/2 ) : ((claw1.difference > 250) ? -claw1.speed : -claw1.speed/2 );
+	//			}
 				} else {
 				claw = 0;
 			}

@@ -47,8 +47,9 @@ task odometer()
 {
 	float xq, yq;
 	SensorValue[odom.x_quad] = SensorValue[odom.y_quad]  = 0.0;
+	writeDebugStreamLine("Odom start");
 	xq = yq = 0.0;
-	while(1)
+	while(1==1)
 	{
 		xq =  SensorValue[odom.x_quad]/odom.xticks*odom.wheelcirc*odom.xdir;
 		yq =  SensorValue[odom.y_quad]/odom.yticks*odom.wheelcirc*odom.ydir;
@@ -60,6 +61,7 @@ task odometer()
         datalogAddValue(1, botpos.y_pos );
         datalogDataGroupEnd();
 #endif
+
 		SensorValue[odom.x_quad] = SensorValue[odom.y_quad]  = 0.0;
 		wait1Msec(100);
 	}
@@ -86,4 +88,12 @@ void get_botlocation(BotLocation *bl)
 {
    bl->x_pos = botpos.x_pos;
    bl->y_pos = botpos.y_pos;
+}
+
+void resetOdometry(){
+  stopTask(odometer);
+  //	SensorValue[odom.x_quad] = SensorValue[odom.y_quad]  = 0.0;
+  SensorValue[odom.x_quad] = SensorValue[odom.y_quad]  = 0.0;
+  	botpos.x_pos =  	botpos.y_pos = 0.0;
+  startTask(odometer);
 }
