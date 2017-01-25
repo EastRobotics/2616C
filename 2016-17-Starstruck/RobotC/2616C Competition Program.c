@@ -2,16 +2,16 @@
 #pragma config(Sensor, in2,    clawManiple,    sensorPotentiometer)
 #pragma config(Sensor, in3,    gyro,           sensorGyro)
 #pragma config(Sensor, dgtl1,  y_quad,         sensorQuadEncoder)
-#pragma config(Sensor, dgtl3,  x_quad,         sensorQuadEncoder)
+#pragma config(Sensor, dgtl4,  x_quad,         sensorQuadEncoder)
 #pragma config(Sensor, dgtl9,  liftlight,      sensorLEDtoVCC)
 #pragma config(Sensor, dgtl10, clawlight,      sensorLEDtoVCC)
 #pragma config(Motor,  port1,           leftrear,      tmotorVex393_HBridge, openLoop, driveLeft)
 #pragma config(Motor,  port2,           liftLT,        tmotorVex393_MC29, openLoop, driveLeft)
 #pragma config(Motor,  port3,           liftLB,        tmotorVex393_MC29, openLoop, driveLeft)
-#pragma config(Motor,  port4,           leftfront,     tmotorVex393_MC29, openLoop, driveLeft)
+#pragma config(Motor,  port4,           leftfront,     tmotorVex393_MC29, openLoop, reversed, driveLeft)
 #pragma config(Motor,  port5,           clawL,         tmotorVex393_MC29, openLoop, driveLeft)
 #pragma config(Motor,  port6,           clawR,         tmotorVex393_MC29, openLoop, reversed, driveRight)
-#pragma config(Motor,  port7,           rightfront,    tmotorVex393_MC29, openLoop, driveRight)
+#pragma config(Motor,  port7,           rightfront,    tmotorVex393_MC29, openLoop, reversed, driveRight)
 #pragma config(Motor,  port8,           liftRT,        tmotorVex393_MC29, openLoop, reversed, driveRight)
 #pragma config(Motor,  port9,           liftRB,        tmotorVex393_MC29, openLoop, reversed, driveRight)
 #pragma config(Motor,  port10,          rightrear,     tmotorVex393_HBridge, openLoop, driveRight)
@@ -47,55 +47,7 @@
 
 // Includes and defines stop, executable code starts
 BotLocation botLoc;
-/*task Drive() {
-while(true) {
-switch(vectordrive) {
-case true:
 
-drive1.Y1 = vexRT[Ch3];
-drive1.X1 = vexRT[Ch4];
-drive1.X2 = vexRT[Ch1];
-FR = -drive1.Y1 + drive1.X2 + drive1.X1;
-BR =  drive1.Y1 - drive1.X2 + drive1.X1;
-FL = drive1.Y1 + drive1.X2 + drive1.X1;
-BL =  -drive1.Y1 - drive1.X2 + drive1.X1;
-if(vexRT[Btn8D]){
-vectordrive = false;
-}
-break;
-case false:
-
-break;
-}
-}
-}
-/*task clawArm() {
-while(true){
-switch(vexRT[Btn6U]) {
-case 1:
-lift = -127;
-while(vexRT[Btn6U]) {
-
-}
-break;
-case 0:
-lift = 0;
-break;
-}
-
-switch(vexRT[Btn6D]) {
-case 1:
-lift = 127;
-while(vexRT[Btn6D]) {
-
-}
-break;
-case 0:
-lift = 0;
-break;
-}
-}
-}*/
 void pre_auton() {
 	clearDebugStream();
 	bStopTasksBetweenModes = false;
@@ -106,8 +58,8 @@ void pre_auton() {
 	startTask(liftPos);
 	writeDebugStreamLine("preauton");
 }
+
 task autonomous() {
-	bool hit = false;
 	writeDebugStreamLine("auto");
 	claw1.tolerance = 200;
 	claw1.speed = 90;
@@ -133,13 +85,23 @@ task autonomous() {
 	resetOdometry();
 	get_botlocation(botLoc);
 	speeds.transitionalVectorY = -127;
-	while(botLoc.y_pos > -12.0) {
+	while(botLoc.y_pos > -24.0) {
 		get_botlocation(botLoc);
 		writeDebugStreamLine("y- %f ", botLoc.y_pos);
-
 	}
 	speeds.transitionalVectorY = 0;
 	throwObjects();
+	//while(botLoc.x_pos < )
+	resetOdometry();
+
+	while(botLoc.x_pos > -24.0) {
+		get_botlocation(botLoc);
+
+	}
+	speeds.transitionalVectorY = 63;
+	wait1Msec(1000);
+	speeds.transitionalVectorY = 0;
+
 }
 
 task usercontrol() {
