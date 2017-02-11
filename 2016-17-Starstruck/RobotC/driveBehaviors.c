@@ -33,8 +33,8 @@ task driveWithController() {
 	while(true) {
 		switch(vectordrive) {
 		case true:
-			speeds.transitionalVectorY = vexRT[Ch3];
-			speeds.rotationalVector = vexRT[Ch1];
+			speeds.transitionalVectorY = vexRT[Ch1];
+			speeds.rotationalVector = vexRT[Ch3];
 			FR = -speeds.transitionalVectorY + speeds.rotationalVector;
 			BR =  speeds.transitionalVectorY - speeds.rotationalVector;
 			FL = speeds.transitionalVectorY + speeds.rotationalVector;
