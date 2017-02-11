@@ -73,42 +73,57 @@ task autonomous() {
 	lift1.tolerance = 200;
 	lift1.speed = 100;
 
-	claw1.desiredPos = wide;
-	writeDebugStreamLine("claw started");
-	turnToHeading(-45, 70, 3);
-	get_botlocation(botLoc);
-	speeds.transitionalVectorY = 127;
-	writeDebugStreamLine("Forward");
-	while(botLoc.y_pos < 30.0) {
+
+	switch (wAuton){
+	case 0:
+		claw1.desiredPos = wide;
+		writeDebugStreamLine("claw started");
+		turnToHeading(-45, 70, 3);
 		get_botlocation(botLoc);
-		writeDebugStreamLine("y- %f ", botLoc.y_pos);
-	}
+		speeds.transitionalVectorY = 127;
+		writeDebugStreamLine("Forward");
+		while(botLoc.y_pos < 30.0) {
+			get_botlocation(botLoc);
+			writeDebugStreamLine("y- %f ", botLoc.y_pos);
 
-	speeds.transitionalVectorY = 0;
-	claw1.desiredPos = closed;
-	wait1Msec(500);
-	lift1.desiredPos = CoG;
-	turnToHeading(-180, 70, 3);
-	resetOdometry();
-	get_botlocation(botLoc);
-	speeds.transitionalVectorY = -127;
-	while(botLoc.y_pos > -24.0) {
+		}
+
+		speeds.transitionalVectorY = 0;
+		claw1.desiredPos = closed;
+		wait1Msec(500);
+		lift1.desiredPos = CoG;
+		turnToHeading(-180, 70, 3);
+		resetOdometry();
 		get_botlocation(botLoc);
-		writeDebugStreamLine("y- %f ", botLoc.y_pos);
+		speeds.transitionalVectorY = -127;
+		while(botLoc.y_pos > -24.0) {
+			get_botlocation(botLoc);
+			writeDebugStreamLine("y- %f ", botLoc.y_pos);
+		}
+		speeds.transitionalVectorY = 0;
+		throwObjects();
+		//while(botLoc.x_pos < )
+		resetOdometry();
+
+		while(botLoc.x_pos > -24.0) {
+			get_botlocation(botLoc);
+
+		}
+		speeds.transitionalVectorY = 63;
+		wait1Msec(1000);
+		speeds.transitionalVectorY = 0;
+		break;
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	default:
+		break;
 	}
-	speeds.transitionalVectorY = 0;
-	throwObjects();
-	//while(botLoc.x_pos < )
-	resetOdometry();
-
-	while(botLoc.x_pos > -24.0) {
-		get_botlocation(botLoc);
-
-	}
-	speeds.transitionalVectorY = 63;
-	wait1Msec(1000);
-	speeds.transitionalVectorY = 0;
-
 }
 
 task usercontrol() {
