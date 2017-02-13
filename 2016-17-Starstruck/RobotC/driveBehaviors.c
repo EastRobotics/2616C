@@ -21,9 +21,9 @@ void turnToHeading(float heading, int speed, float tolerance) {
 		angleDifference = gyro_angle - heading;
 		if(BR == 0) {
 			if(angleDifference < 0) {
-				speeds.rotationalVector = -speed;
+				speeds.transitionalVectorY = -speed;
 				} else {
-				speeds.rotationalVector = speed;
+				speeds.transitionalVectorY = speed;
 			}
 		}
 	}

@@ -55,6 +55,7 @@ BotLocation botLoc;
 
 
 void pre_auton() {
+	bDisplayCompetitionStatusOnLcd = false;
 	clearDebugStream();
 	bStopTasksBetweenModes = false;
 	init_odometry(x_quad, y_quad,9.42,360,360,neg,neg);
@@ -80,7 +81,7 @@ task autonomous() {
 		writeDebugStreamLine("claw started");
 		turnToHeading(-45, 70, 3);
 		get_botlocation(botLoc);
-		speeds.transitionalVectorY = 127;
+		speeds.rotationalVector = 127;
 		writeDebugStreamLine("Forward");
 		while(botLoc.y_pos < 30.0) {
 			get_botlocation(botLoc);
@@ -88,19 +89,19 @@ task autonomous() {
 
 		}
 
-		speeds.transitionalVectorY = 0;
+		speeds.rotationalVector = 0;
 		claw1.desiredPos = closed;
 		wait1Msec(500);
 		lift1.desiredPos = CoG;
 		turnToHeading(-180, 70, 3);
 		resetOdometry();
 		get_botlocation(botLoc);
-		speeds.transitionalVectorY = -127;
+		speeds.rotationalVector = -127;
 		while(botLoc.y_pos > -24.0) {
 			get_botlocation(botLoc);
 			writeDebugStreamLine("y- %f ", botLoc.y_pos);
 		}
-		speeds.transitionalVectorY = 0;
+		speeds.rotationalVector = 0;
 		throwObjects();
 		//while(botLoc.x_pos < )
 		resetOdometry();
@@ -109,9 +110,9 @@ task autonomous() {
 			get_botlocation(botLoc);
 
 		}
-		speeds.transitionalVectorY = 63;
+		speeds.rotationalVector = 63;
 		wait1Msec(1000);
-		speeds.transitionalVectorY = 0;
+		speeds.rotationalVector = 0;
 		break;
 	case 1:
 		break;
@@ -129,6 +130,8 @@ task autonomous() {
 task usercontrol() {
 	/*startTask(spin);
 	wait1Msec(5000);*/
+	clawMan = false;
+	liftMan = false;
 	startTask(driveWithController);
 	//   startTask(clawGrasp);
 	claw1.tolerance = 200;

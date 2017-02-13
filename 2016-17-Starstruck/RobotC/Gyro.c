@@ -9,6 +9,7 @@ task runGyro() {
 	float angle;
 	float offsetAngle;
 	int f = 0;
+	bLCDBacklight = false;
 	SensorType[gyro] = sensorNone;
 	wait1Msec(500);
 	SensorType[gyro]= sensorGyro;
@@ -19,7 +20,7 @@ task runGyro() {
 	wait1Msec(1000);
 
 	SensorScale[gyro] = 130;
-
+  bLCDBacklight = true;
 	offsetAngle =  SensorValue[gyro];
 	while(true){
 		value = SensorValue[gyro];

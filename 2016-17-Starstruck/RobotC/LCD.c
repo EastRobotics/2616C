@@ -7,7 +7,7 @@ wait1Msec(5);
 
 task runLCD()
 {
-bLCDBacklight = true;                                    // Turn on LCD Backlight
+//bLCDBacklight = true;                                    // Turn on LCD Backlight
 string mainBattery, backupBattery,selector,liftSensor,clawSensor;
 float PEBatteryLevel;
 BotLocation bLoc;
