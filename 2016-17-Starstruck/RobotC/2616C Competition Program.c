@@ -46,19 +46,20 @@ int wAuton;
 #include "Gyro.c"
 #include "OdometryMouse.c"
 #include "clawBehaviors.c"
+BotLocation botLoc;
 #include "driveBehaviors.c"
 #include "liftBehaviors.c"
 #include "behaviours.c"
 #include "LCD.c"
 // Includes and defines stop, executable code starts
-BotLocation botLoc;
+
 
 
 void pre_auton() {
 	bDisplayCompetitionStatusOnLcd = false;
 	clearDebugStream();
 	bStopTasksBetweenModes = false;
-	init_odometry(x_quad, y_quad,9.42,360,360,neg,neg);
+	init_odometry(x_quad, y_quad,9.42,360,360,neg,pos);
 	startTask(runGyro);
 	startTask(drive);
 	startTask(clawPos);
@@ -78,75 +79,54 @@ task autonomous() {
 	switch (wAuton){
 	case 0:
 		claw1.desiredPos = wide;
+		lift1.desiredPos += 400;
 		writeDebugStreamLine("claw started");
-		turnToHeading(-45, 70, 3);
+		turnToHeading(-45, 60, 3);
+
 		get_botlocation(botLoc);
-		speeds.rotationalVector = 127;
-		writeDebugStreamLine("Forward");
-		while(botLoc.y_pos < 30.0) {
-			get_botlocation(botLoc);
-			writeDebugStreamLine("y- %f ", botLoc.y_pos);
+		moveToPosition(30.00);
 
-		}
-
-		speeds.rotationalVector = 0;
 		claw1.desiredPos = closed;
 		wait1Msec(500);
 		lift1.desiredPos = CoG;
-		turnToHeading(-180, 70, 3);
+
+		turnToHeading(-180, 60, 3);
 		resetOdometry();
+
 		get_botlocation(botLoc);
-		speeds.rotationalVector = -127;
-		while(botLoc.y_pos > -24.0) {
-			get_botlocation(botLoc);
-			writeDebugStreamLine("y- %f ", botLoc.y_pos);
-		}
-		speeds.rotationalVector = 0;
+		moveToPosition(-12.00);
+
 		throwObjects();
 		//while(botLoc.x_pos < )
 		resetOdometry();
-
-		while(botLoc.x_pos > -24.0) {
-			get_botlocation(botLoc);
-
-		}
-		speeds.rotationalVector = 63;
-		wait1Msec(1000);
-		speeds.rotationalVector = 0;
+		moveToPosition(24.00);
 		break;
 	case 1:
-
+			claw1.desiredPos = wide;
+			lift1.desiredPos +=400;
+			speeds.transitionalVectorY = 63;
+			lift1.desiredPos = CoG;
 		break;
 	case 2:
 
 		break;
 	case 3:
+
 	claw1.desiredPos = wide;
 		writeDebugStreamLine("claw started");
 		turnToHeading(45, 70, 3);
 		get_botlocation(botLoc);
-		speeds.rotationalVector = 127;
-		writeDebugStreamLine("Forward");
-		while(botLoc.y_pos < 30.0) {
-			get_botlocation(botLoc);
-			writeDebugStreamLine("y- %f ", botLoc.y_pos);
-
-		}
-		speeds.rotationalVector = 0;
+		moveToPosition(30.00);
 		claw1.desiredPos = closed;
 		wait1Msec(500);
 		lift1.desiredPos = CoG;
 		turnToHeading(180, 70, 3);
 		resetOdometry();
+
 		get_botlocation(botLoc);
-		speeds.rotationalVector = -127;
-		while(botLoc.y_pos > -24.0) {
-			get_botlocation(botLoc);
-			writeDebugStreamLine("y- %f ", botLoc.y_pos);
-		}
-		speeds.rotationalVector = 0;
+		moveToPosition(-24.00);
+
 		throwObjects();
-		//while(botLoc.x_pos < )
 		resetOdometry();
 		break;
 	case 4:
@@ -157,18 +137,17 @@ task autonomous() {
 }
 
 task usercontrol() {
-	/*startTask(spin);
-	wait1Msec(5000);*/
+	stopTask(drive);
 	clawMan = false;
 	liftMan = false;
 	startTask(driveWithController);
-	//   startTask(clawGrasp);
 	claw1.tolerance = 200;
 	claw1.speed = 90;
 	lift1.tolerance = 200;
 	lift1.speed = 100;
-	//startTask(clawPos);
-	//startTask(liftPos);
 	startTask(macroSelection);
 	startTask(incDecTolerance);
+	while(true) {
+		get_botlocation(botLoc);
+	}
 }

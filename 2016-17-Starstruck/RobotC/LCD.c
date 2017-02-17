@@ -1,4 +1,3 @@
-
 void waitForRelease()
 {
 while(nLCDButtons != 0){}
