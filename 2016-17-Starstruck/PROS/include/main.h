@@ -114,6 +114,7 @@ void initialize();
  */
 void operatorControl();
 
+void drive(void);
 // End C++ export structure
 #ifdef __cplusplus
 }

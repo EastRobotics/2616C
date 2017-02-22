@@ -3,19 +3,18 @@
   extern "C" {
   #endif
     #define mDriveFR 7
-    #define mDriveFL 4
-    #define mDriveBR 10
-    #define mDriveBL 1
+    #define mDriveFL 2
+    #define mDriveBR 8
+    #define mDriveBL 3
 
-    #define mLiftU_R 8
-    #define mLiftU_L 2
-    #define mLiftL_R 9
-    #define mLiftL_L 3
+    #define mLiftU_R 6
+    #define mLiftU_L 4
+    #define mLiftL_R 7
+    #define mLiftL_L 5
+      // ^ on power expander ^
+    #define mClaw_L 1
+    #define mClaw_R 10
 
-
-    #define mClaw_L 5
-    #define mClaw_R 6
-  // ^ on power expander ^
 
     #define aLiftPot 1
     #define aClawPot 2
@@ -24,8 +23,9 @@
 
     #define dOdomEncoder_YT 1
     #define dOdomEncoder_YL 2
-    #define dOdomEncoder_XT 4
-    #define dOdomEncoder_XL 5
+//    #define dOdomEncoder_XT 4
+//    #define dOdomEncoder_XL 5
+//    ^unused
     #define dLiteDiodeLift 9
     #define dLiteDiodeClaw 10
 
