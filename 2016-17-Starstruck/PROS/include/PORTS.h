@@ -2,7 +2,7 @@
   #ifdef __cplusplus
   extern "C" {
   #endif
-    #define mDriveFR 7
+    #define mDriveFR 9
     #define mDriveFL 2
     #define mDriveBR 8
     #define mDriveBL 3
@@ -23,11 +23,12 @@
 
     #define dOdomEncoder_YT 1
     #define dOdomEncoder_YL 2
+
+    #define dClawEncoder_TOP 11
+    #define dClawEncoder_BOT 12
 //    #define dOdomEncoder_XT 4
 //    #define dOdomEncoder_XL 5
 //    ^unused
-    #define dLiteDiodeLift 9
-    #define dLiteDiodeClaw 10
 
 
 

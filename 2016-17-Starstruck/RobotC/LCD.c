@@ -24,7 +24,7 @@ clearLCDLine(0);                                            // Clear line 1 (0) 
 clearLCDLine(1);                                            // Clear line 2 (1) of the LCD
 
 //Display the Primary Robot battery voltage
-displayLCDString(0, 0, "");
+displayLCDString(0, 1, "");
 sprintf(mainBattery, "P:%1.2f%c E:%1.2f%c ", nImmediateBatteryLevel/1000.0,'V',PEBatteryLevel,'V'); //Build the value to be displayed
 displayNextLCDString(mainBattery);
 

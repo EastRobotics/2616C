@@ -84,8 +84,7 @@ void init_odometry(int x_quad, int y_quad, float whlcir = 9.42, float xtck = 360
 		datalogClear();
 #endif
 }
-void get_botlocation(BotLocation *bl)
-{
+void get_botlocation(BotLocation *bl) {
    bl->x_pos = botpos.x_pos;
    bl->y_pos = botpos.y_pos;
 }
