@@ -30,8 +30,9 @@ currentEncoder = encoderGet(encClaw);
           runClaw(speed);
           currentEncoder = encoderGet(encClaw);
           printf("%d\n",currentEncoder - lastPosition);
-      }  runClaw(0);}
+      }  }
     //  printf("%s\n", );
+    runClaw(0);
     }
 
   }
