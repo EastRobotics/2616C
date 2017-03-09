@@ -40,3 +40,19 @@ void moveToPosition(float position) {
     y = 0;
   }
 }
+// void turnToHeading(float heading, int speed, float tolerance) {
+// 	float angleDifference; // error
+// 	angleDifference = gyro_angle - heading;
+// 	while(abs(angleDifference) > tolerance) {
+// 		//writeDebugStreamLine("Gyro: %f | %f", gyro_angle, angleDifference); // print gyro angle in debug
+// 		angleDifference = gyro_angle - heading;
+// 		if(motorGet(mDriveBR) == 0) {
+// 			if(angleDifference < 0) {
+// 				r = -speed;
+// 				} else {
+// 				r = speed;
+// 			}
+// 		}
+// 	}
+// 	r = 0;
+// }

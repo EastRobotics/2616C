@@ -12,6 +12,7 @@
 
 #include "main.h"
 
+FILE *LCD = uart1;
 Encoder getEncoderOdomY() {return encOdomY;}
 Encoder getEncoderClaw() { return encClaw;}
 void initializeIO() {
@@ -31,7 +32,14 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
+  //
+  // lcdClear(uart1);
+  // lcdInit(uart1);
+  // lcdSetBacklight(uart1, true);
+  // lcdSetBacklight(uart1, false);
+  initLCDFromLCDc();
   speakerInit();
+  gyro = gyroInit(aGyroscope, 0);
   encClaw = encoderInit(dClawEncoder_TOP, dClawEncoder_BOT, false);
   encOdomY = encoderInit(dOdomEncoder_YT, dOdomEncoder_YL, false);
   speakerPlayRtttl("LiftBeep: d=32,o=5,b=108: d");

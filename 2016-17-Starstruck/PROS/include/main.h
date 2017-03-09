@@ -133,7 +133,8 @@ int r, y;
 void runLCD(void*);
 BotLocation botLoc;
 void operatorControl();
-
+void turnToHeading(int);
+void initLCDFromLCDc();
 // End C++ export structure
 #ifdef __cplusplus
 }
