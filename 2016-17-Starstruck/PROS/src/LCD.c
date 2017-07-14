@@ -10,8 +10,6 @@ char Auton[6][3] = {"R1","R2","R3","L1","L2","L3"};
 char mainBattery[12], backupBattery[12], selector[12],liftSensor[12], clawSensor[12];
 int wAuton;
 
-
-
 void runLCD(void* ignore) {                     // Turn on LCD Backlight
 	float PEBatteryLevel;
 	BotLocation bLoc;
