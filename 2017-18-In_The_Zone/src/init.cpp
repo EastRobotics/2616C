@@ -20,8 +20,8 @@ namespace GeneralRobotics {
     public:
       int speed;
       void set_Value(int);
-      Motor() {
-        int spd = new int;
+      Motor(int spd) {
+        speed = spd;
       }
   };
 };
