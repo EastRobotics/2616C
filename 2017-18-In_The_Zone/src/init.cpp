@@ -11,6 +11,7 @@
  */
 
 #include "main.h"
+#include<iostream>
 using namespace std;
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
