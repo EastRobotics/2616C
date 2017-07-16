@@ -15,16 +15,7 @@ extern "C" {
   void __libc_init_array();
 }
 
-namespace GeneralRobotics {
-  class Motor {
-    public:
-      int speed;
-      void set_Value(int);
-      Motor(int spd) {
-        speed = spd;
-      }
-  };
-};
+
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
  * VEX Cortex is starting up. As the scheduler is still paused, most API functions will fail.
@@ -33,8 +24,6 @@ namespace GeneralRobotics {
  * states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
- using namespace GeneralRobotics;
-Motor *motr = new Motor(0);
 void initializeIO() {
   __libc_init_array();
 }
