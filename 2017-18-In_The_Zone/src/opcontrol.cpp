@@ -29,56 +29,56 @@
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
- #define Y1 joystickGetAnalog('1', '3')
- #define X1 joystickGetAnalog('1', '1')
- #define X2 joystickGetAnalog('1', '4')
- #define aY1 abs(Y1)
- #define aX1 abs(X1)
- #define aX2 abs(X2)
+ #define threshold(x) (abs(x)>24?x:0)
+ #define Y joystickGetAnalog('1', '3')
+ #define R joystickGetAnalog('1', '1')
+ #define X joystickGetAnalog('1', '4')
+ #define drive threshold(Y)
+ #define strafe threshold(X)
+ #define rotate threshold(R)
 void operatorControl() {
-	Wheel *FL = new Wheel(5);
-  // FrontLeft is v_2
-	Wheel *FR = new Wheel(4);
-  // FrontRight is v_1
-	Wheel *BL = new Wheel(3);
-  // BackLeft is v_3
-	Wheel *BR = new Wheel(2);
   Wheel wheels[4];
-  wheels[0] = *FR;
-  wheels[1] = *FL;
-  wheels[2] = *BL;
-  wheels[3] = *BR;
-  // BackRight is v_4
+  wheels[0] = *new Wheel(4); // FR
+  wheels[1] = *new Wheel(5); // FL
+  wheels[2] = *new Wheel(3); // BL
+  wheels[3] = *new Wheel(2); // BR
 	while (1) {
-    if (aX1 > 24) {
-        for (size_t i = 0; i < sizeof(wheels)/sizeof(*wheels); i++) {
-          wheels[i].setVector('w', X1);
-        }
-    } else {
-      for (size_t i = 0; i < sizeof(wheels)/sizeof(*wheels); i++) {
-        wheels[i].setVector('w', 0);
-      }
-    }
-    if (aY1 > 24) {
-      for (size_t i = 0; i < sizeof(wheels)/sizeof(*wheels); i++) {
-        wheels[i].setVector('y', Y1);
-      }
-    } else {
-      for (size_t i = 0; i < sizeof(wheels)/sizeof(*wheels); i++) {
-        wheels[i].setVector('y', 0);
-      }
-    }
-    if(aX2 > 24) {
-      for (size_t i = 0; i < sizeof(wheels)/sizeof(*wheels); i++) {
-        wheels[i].setVector('x', X2);
-      }
-    } else {
-      for (size_t i = 0; i < sizeof(wheels)/sizeof(*wheels); i++) {
-        wheels[i].setVector('x', 0);
-      }
-    }
-	}
+
+    wheels[0].setValue(drive - strafe + rotate);
+    wheels[3].setValue(drive + strafe + rotate);
+    wheels[1].setValue(-(drive + strafe - rotate));
+    wheels[2].setValue(-(drive - strafe - rotate));
+  }
 }
+  //   for (size_t i = 0; i < sizeof(wheels)/sizeof(*wheels); i++) {
+  //     if()
+  //       wheels[i].setVector('y', -Y1);
+  //     if (i % 2 == 0) {
+  //       wheels[i].setVector('x', -X2);
+  //     } else {
+  //       wheels[i].setVector('x', X2);
+  //     }
+  //     if(i % 3 == 0) {
+  //       wheels[i].setVector('w', -X1);
+  //     }  else {
+  //       wheels[i].setVector('w', X1);
+  //     }
+  //   for (size_t i = 0; i < sizeof(wheels)/sizeof(*wheels); i++) {
+  //
+  //     int x = wheels[i].getVector('x');
+  //     int y = wheels[i].getVector('y');
+  //     int w = wheels[i].getVector('w');
+  //     printf("%d Ch1 : %d Ch3 : %d Ch4\n", w, y, x);
+  //     if (xThr | yThr | wThr) {
+  //         wheels[i].setValue(w + x + y);
+  //     } else {
+  //       wheels[i].setValue(0);
+  //     }
+  //
+  //     }
+  //   }
+  // }
+  // }
 // if(abs(joystickGetAnalog('1', '1')) > 24 &&  abs(joystickGetAnalog('1','3')) > 24) {
 // 	FR -> setValue(Y1 - X2 + X1);
 // 	BR -> setValue(Y1 + X2 + X1);

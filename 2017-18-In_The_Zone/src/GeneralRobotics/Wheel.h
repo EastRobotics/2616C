@@ -31,8 +31,9 @@ int Wheel::getVector(char movement_vector) {
     case 'y':
       return v_t_y;
       break;
-    case 'r' or 'w':
-    return v_w;
+    case 'r':
+    case 'w':
+      return v_w;
       break;
   }
 }
@@ -44,8 +45,9 @@ void Wheel::setVector(char movement_vector, int value) {
     case 'y':
       v_t_y = value;
       break;
-    case 'r' or 'w':
-    v_w = value;
+    case 'w':
+    case 'r':
+      v_w = value;
       break;
   }
 }
