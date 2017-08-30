@@ -1,0 +1,7 @@
+﻿  Invoking make in C:\Users\egriffith\Documents\GitHub\2616C\2017-18-In_The_Zone...
+  CPC -I../include -I../src auto.cpp
+  CPC -I../include -I../src init.cpp
+  LN ./bin/auto.o ./bin/init.o ./bin/opcontrol.o ./firmware/libpros.a -lgcc -lm to bin/output.elf
+     text	   data	    bss	    dec	    hex	filename
+    12816	      0	   3848	  16664	   4118	./bin/output.elf
+  arm-none-eabi-objcopy ./bin/output.elf -O binary ./bin/output.bin

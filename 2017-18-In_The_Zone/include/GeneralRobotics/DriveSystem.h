@@ -1,4 +1,4 @@
-#include "../src/GeneralRobotics/Wheel.h"
+#include "Wheel.h"
 class DriveSystem {
   Wheel *FR;
   Wheel *FL;

@@ -1,4 +1,4 @@
-#include "../src/GeneralRobotics/LinkedList.h"
+#include "../../include/GeneralRobotics/LinkedList.h"
 LinkedList::LinkedList() {
   head -> mtr = NULL;
   head -> next = NULL;
@@ -15,8 +15,7 @@ bool LinkedList::insertNode(node *newNode, int position) {
     return true;
   }
   int count = 0;
-  node *p = head;
-  node *q = head;
+  node *p = head, *q = head;
   while(q) {
     if (count == position) {
       p -> next = newNode;

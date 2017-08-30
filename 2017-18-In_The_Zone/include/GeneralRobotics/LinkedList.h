@@ -1,4 +1,4 @@
-#include "../src/GeneralRobotics/Motor.h"
+#include "Motor.h"
 struct node {
   Motor *mtr;
   node *next;

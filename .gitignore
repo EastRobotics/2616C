@@ -27,3 +27,7 @@
 *.i*86
 *.x86_64
 *.hex
+*.opendb
+/2017-18-In_The_Zone/.vs/2616C Comp. Code 2017-18/v15/Browse.VC.db
+*.opendb
+/2017-18-In_The_Zone/.vs/2616C Comp. Code 2017-18/v15/Browse.VC.opendb
