@@ -10,11 +10,7 @@
  * obtained from http://sourceforge.net/projects/freertos/files/ or on request.
  */
 
-#include <main.h>
-extern "C" {
-  void __libc_init_array();
-}
-
+#include "main.h"
 
 /*
  * Runs pre-initialization code. This function will be started in kernel mode one time while the
@@ -25,7 +21,6 @@ extern "C" {
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO() {
-  __libc_init_array();
 }
 
 /*
@@ -42,5 +37,5 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
-
+  print("crapprit");
 }

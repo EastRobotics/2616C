@@ -1,6 +1,6 @@
 /** @file main.h
  * @brief Header file for global functions
- *
+ * 
  * Any experienced C or C++ programmer knows the importance of header files. For those who
  * do not, a header file allows multiple files to reference functions in other files without
  * necessarily having to see the code (and therefore causing a multiple definition). To make
@@ -9,14 +9,32 @@
  *
  * This file is included by default in the predefined stubs in each VEX Cortex PROS Project.
  *
- * Copyright (c) 2011-2016, Purdue University ACM SIGBots.
+ * Copyright (c) 2011-2014, Purdue University ACM SIG BOTS.
  * All rights reserved.
  *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of Purdue University ACM SIG BOTS nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
  *
- * PROS contains FreeRTOS (http://www.freertos.org) whose source code may be
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL PURDUE UNIVERSITY ACM SIG BOTS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Purdue Robotics OS contains FreeRTOS (http://www.freertos.org) whose source code may be
  * obtained from http://sourceforge.net/projects/freertos/files/ or on request.
  */
 
@@ -25,12 +43,15 @@
 // This prevents multiple inclusion, which isn't bad for this file but is good practice
 #define MAIN_H_
 
-#include "API.h"
+#include <API.h>
+
 // Allow usage of this file in C++ programs
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define threshold(x) (abs(x)>24?x:0)
+
+//#define AUTO_DEBUG
+
 // A function prototype looks exactly like its declaration, but with a semicolon instead of
 // actual code. If a function does not match a prototype, compile errors will occur.
 
@@ -50,10 +71,6 @@ extern "C" {
  * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
- 
-void driveControl(void*);
-void liftControl(void*);
-
 void autonomous();
 /**
  * Runs pre-initialization code. This function will be started in kernel mode one time while the

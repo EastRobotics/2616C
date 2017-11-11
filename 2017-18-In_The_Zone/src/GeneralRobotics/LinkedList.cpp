@@ -1,4 +1,4 @@
-#include "../../include/GeneralRobotics/LinkedList.h"
+#include <GeneralRobotics/LinkedList.h>
 LinkedList::LinkedList() {
   head -> mtr = NULL;
   head -> next = NULL;
