@@ -13,9 +13,18 @@
 #include <main.h>
 
  void operatorControl() {
-   printf("%s\n", "fuck it");
-   taskCreate(driveControl, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
-   taskCreate(liftControl, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+   taskCreate(
+     driveControl,
+     TASK_DEFAULT_STACK_SIZE,
+     NULL,
+     TASK_PRIORITY_DEFAULT
+   );
+   taskCreate(
+     mogoControl,
+     TASK_DEFAULT_STACK_SIZE,
+     NULL,
+     TASK_PRIORITY_DEFAULT
+   );
    while (1) {
      printf("%s\n", "Shit");
 		delay(20);
