@@ -1,10 +1,33 @@
-#include <main.h>
-#define Y joystickGetAnalog(1, 3)
-#define R joystickGetAnalog(1, 1)
-#define X joystickGetAnalog(1, 4)
+#include <GeneralRobotics.h>
 
-#define drive threshold(Y)
-#define strafe threshold(X)
-#define rotate threshold(R)
+struct _Node {
+  GeneralRobotics::DriveMotor* mtr;
+  int rel;
+  _Node* next;
+};
 
-/* Block of general shorthand definitions */
+GeneralRobotics::Drive::Drive(int type, LinkedList v) {
+  this->type = type;
+  this->v = v;
+}
+
+void GeneralRobotics::Drive::move(int speed) {
+  for (int i = 0; i < v.count(); i++) {
+    v.retrieve(i) -> mtr -> setValue(speed * v.retrieve(i) -> rel);
+  }
+}
+
+
+void driveControl(void* ignore) {
+  using namespace GeneralRobotics;
+  LinkedList mtrs = *new LinkedList();
+  mtrs.makeAndInsertNode(new DriveMotor(4), 1);
+  mtrs.makeAndInsertNode(new DriveMotor(7), 1);
+  mtrs.makeAndInsertNode(new DriveMotor(9), -1);
+  mtrs.makeAndInsertNode(new DriveMotor(3), -1);
+  printf("hello\n");
+  Drive driveSet = *new Drive(4, mtrs);
+  while (1) {
+    driveSet.move(driveVal);
+  }
+}

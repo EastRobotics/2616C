@@ -6,7 +6,7 @@ MAKE_COMMAND=make
 # Makefile for IFI VeX Cortex Microcontroller (STM32F103VD series)
 DEVICE=VexCortex
 # Libraries to include in the link (use -L and -l) e.g. -lm, -lmyLib
-LIBRARIES=$(wildcard $(ROOT)/firmware/*.a) -lgcc -lm -lstdc++
+LIBRARIES=$(wildcard $(ROOT)/firmware/*.a) -lgcc -lm
 # Prefix for ARM tools (must be on the path)
 MCUPREFIX=arm-none-eabi-
 # Flags for the assembler

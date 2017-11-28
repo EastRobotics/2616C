@@ -102,7 +102,6 @@ void operatorControl();
 void driveControl(void*);
 void liftControl(void*);
 void mogoControl(void*);
-
 // End C++ export structure
 #ifdef __cplusplus
 }

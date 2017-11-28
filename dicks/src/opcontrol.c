@@ -29,9 +29,44 @@
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
+#define threshold(x) (abs(x)>24?x:0)
+
+#define mogoVal joystickGetAnalog('2','3')
+#define mogoVal_actual threshold(mogoVal)
+
+#define Y joystickGetAnalog(1, 3)
+#define R joystickGetAnalog(1, 1)
+#define X joystickGetAnalog(1, 4)
+#define slaveR joystickGetAnalog(2, 1)
+#define drive threshold(Y)
+#define strafe threshold(X)
+#define rotate threshold(R)
+#define rotateSlave threshold(slaveR)
+
 void operatorControl() {
 	printf("crap");
+	int downshift = 1;
+	bool lastButton6D = 0;
+	bool lastButton6U = 0;
 	while (1) {
-		delay(20);
+		motorSet(2, mogoVal_actual);
+		motorSet(8, mogoVal_actual);
+		motorSet(4, (drive + rotate)/downshift);
+		motorSet(7, (-drive + rotate)/downshift);
+		motorSet(9, (-drive + rotate)/downshift);
+		motorSet(3, (drive + rotate)/downshift);
+		printf("%d\n", 127/downshift);
+		if(joystickGetDigital(1, 6, JOY_DOWN)) {
+			if(lastButton6D & joystickGetDigital(1, 6, JOY_DOWN)) {
+				downshift = 3;
+			}
+			lastButton6D = joystickGetDigital(1, 6, JOY_DOWN);
+		}
+		if(joystickGetDigital(1, 6, JOY_UP)) {
+			if(lastButton6U & joystickGetDigital(1, 6, JOY_UP)) {
+				downshift = 1;
+			}
+			lastButton6U = joystickGetDigital(1, 6, JOY_UP);
+		}
 	}
 }
