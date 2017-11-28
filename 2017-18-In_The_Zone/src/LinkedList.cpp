@@ -1,10 +1,5 @@
 #include <main.h>
 using namespace GeneralRobotics;
-typedef struct _Node {
-  DriveMotor* mtr;
-  int rel;
-  Node* next;
-};
 
 Node* head;
 int listLength;
