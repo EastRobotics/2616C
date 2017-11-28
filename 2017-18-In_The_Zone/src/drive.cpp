@@ -1,11 +1,5 @@
 #include <GeneralRobotics.h>
 
-struct _Node {
-  GeneralRobotics::DriveMotor* mtr;
-  int rel;
-  _Node* next;
-};
-
 GeneralRobotics::Drive::Drive(int type, LinkedList v) {
   this->type = type;
   this->v = v;
