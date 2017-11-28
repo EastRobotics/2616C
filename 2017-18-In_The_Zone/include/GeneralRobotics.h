@@ -19,8 +19,11 @@ namespace GeneralRobotics {
       DriveMotor(int);
       DriveMotor(unsigned char, int);
   };
-  struct _Node;
-  typedef struct _Node Node;
+ struct Node {
+  DriveMotor* mtr;
+  int rel;
+  Node* next;
+ }
   class LinkedList {
     private:
       Node *head;
