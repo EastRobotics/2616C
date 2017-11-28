@@ -11,7 +11,12 @@ GeneralRobotics::Drive::Drive(int type, LinkedList v) {
   this->v = v;
 }
 
-void GeneralRobotics::Drive::move(int speed) {
+void GeneralRobotics::Drive::moveTank(Point p1, Point p2, int Rspeed, int Tspeed) {
+  for (int i = 0; i < v.count(); i++) {
+    v.retrieve(i) -> mtr -> setValue(speed);
+  }
+  while(gyroval < 90 - (atan(((p2->y) - (p1->y))/((p2->x) - (p1->x)))))) {}
+    
   for (int i = 0; i < v.count(); i++) {
     v.retrieve(i) -> mtr -> setValue(speed * v.retrieve(i) -> rel);
   }
