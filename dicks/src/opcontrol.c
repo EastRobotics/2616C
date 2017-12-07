@@ -43,6 +43,7 @@
 #define rotate threshold(R)
 #define rotateSlave threshold(slaveR)
 
+
 void operatorControl() {
 	printf("crap");
 	int downshift = 1;
@@ -50,11 +51,15 @@ void operatorControl() {
 	bool lastButton6U = 0;
 	while (1) {
 		motorSet(2, mogoVal_actual);
-		motorSet(8, mogoVal_actual);
-		motorSet(4, (drive + rotate)/downshift);
-		motorSet(7, (-drive + rotate)/downshift);
-		motorSet(9, (-drive + rotate)/downshift);
 		motorSet(3, (drive + rotate)/downshift);
+		motorSet(4, (drive + rotate)/downshift);
+		motorSet(5, lift)
+		motorSet(6, liftM)			
+		motorSet(7, (-drive + rotate)/downshift);
+		motorSet(8, claw)
+		motorSet(9, (-drive + rotate)/downshift);
+		
+		
 		printf("%d\n", 127/downshift);
 		if(joystickGetDigital(1, 6, JOY_DOWN)) {
 			if(lastButton6D & joystickGetDigital(1, 6, JOY_DOWN)) {
