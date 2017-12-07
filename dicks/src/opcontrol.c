@@ -43,7 +43,8 @@
 #define rotate threshold(R)
 #define rotateSlave threshold(slaveR)
 #define lift joystickGetDigital(1, 6, JOY_UP)?127:(joystickGetDigital(1, 6, JOY_DOWN)?-127:0)
-
+#define claw joystickGetDigital(1, 5, JOY_UP)?127:(joystickGetDigital(1, 5, JOY_DOWN)?-127:0)
+#define swing
 void operatorControl() {
 	printf("crap");
 	int downshift = 1;
