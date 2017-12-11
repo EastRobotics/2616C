@@ -42,8 +42,8 @@
 #define strafe threshold(X)
 #define rotate threshold(R)
 #define rotateSlave threshold(slaveR)
-#define lift joystickGetDigital(1, 6, JOY_UP)?127:(joystickGetDigital(1, 6, JOY_DOWN)?-127:0)
-#define claw joystickGetDigital(1, 5, JOY_UP)?127:(joystickGetDigital(1, 5, JOY_DOWN)?-127:0)
+#define lift joystickGetDigital(1, 5, JOY_UP)?-127:(joystickGetDigital(1, 5, JOY_DOWN)?127:0)
+#define claw joystickGetDigital(2, 4, JOY_UP)?-127:(joystickGetDigital(2, 4, JOY_DOWN)?127:0)
 #define swing
 void operatorControl() {
 	printf("crap");
@@ -51,15 +51,16 @@ void operatorControl() {
 	bool lastButton6D = 0;
 	bool lastButton6U = 0;
 	while (1) {
+		motorSet(1, claw);
 		motorSet(2, mogoVal_actual);
 		motorSet(3, (drive + rotate)/downshift);
 		motorSet(4, (drive + rotate)/downshift);
-		motorSet(5, lift)
-		motorSet(6, liftM)			
+		motorSet(5, lift);
+		motorSet(6, liftM);		
 		motorSet(7, (-drive + rotate)/downshift);
-		motorSet(8, claw)
+		motorSet(8, swing);
 		motorSet(9, (-drive + rotate)/downshift);
-		
+		motorSet(10, grabbyMcGrabberson);
 		
 		printf("%d\n", 127/downshift);
 		if(joystickGetDigital(1, 6, JOY_DOWN)) {
