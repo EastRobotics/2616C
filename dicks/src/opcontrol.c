@@ -95,6 +95,7 @@ void operatorControl() {
 	hc05Init(1, false);
 	blisten(1, blueListen);
 
+	char *song = "StarWars:d=4,o=5,b=45:32p,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#.6,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#6";
 	printf("crap");
 	int downshift = 1;
 	bool lastButton6D = 0;
