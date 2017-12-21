@@ -27,10 +27,13 @@
 
 #include "API.h"
 // Allow usage of this file in C++ programs
+#define threshold(x) (abs(x)>24?x:0)
+#include <GeneralRobotics.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define threshold(x) (abs(x)>24?x:0)
+
 // A function prototype looks exactly like its declaration, but with a semicolon instead of
 // actual code. If a function does not match a prototype, compile errors will occur.
 
@@ -50,9 +53,8 @@ extern "C" {
  * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
- 
-void driveControl(void*);
-void liftControl(void*);
+
+
 
 void autonomous();
 /**
@@ -97,6 +99,9 @@ void initialize();
  */
 void operatorControl();
 
+void driveControl(void*);
+void liftControl(void*);
+void mogoControl(void*);
 // End C++ export structure
 #ifdef __cplusplus
 }

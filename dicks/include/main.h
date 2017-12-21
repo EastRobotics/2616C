@@ -1,6 +1,6 @@
 /** @file main.h
  * @brief Header file for global functions
- * 
+ *
  * Any experienced C or C++ programmer knows the importance of header files. For those who
  * do not, a header file allows multiple files to reference functions in other files without
  * necessarily having to see the code (and therefore causing a multiple definition). To make
@@ -114,6 +114,12 @@ void initialize();
  */
 void operatorControl();
 
+#define bprintf(uart,format, args...) fprintf(uart, format, args)
+void blisten(char, void(*)(char*));
+#define LINE_TRACKER_PORT 1
+Ultrasonic dexterUS;
+Encoder liftEnc;
+Encoder mogoEnc;
 // End C++ export structure
 #ifdef __cplusplus
 }

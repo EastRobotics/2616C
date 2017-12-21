@@ -21,6 +21,7 @@
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
 void initializeIO() {
+  standaloneModeEnable();
 }
 
 /*
@@ -37,5 +38,8 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
-  print("crapprit");
+  mogoEnc = encoderInit(1,2,false);
+
+  liftEnc = encoderInit (3,4,false);
+  dexterUS = ultrasonicInit(6, 5);
 }
