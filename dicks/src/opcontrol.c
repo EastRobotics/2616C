@@ -51,7 +51,8 @@
 void hc05Init(char uart, bool atMode);
 
 char *bluetoothRead(char uart);
-
+const char *starwars = "StarWars:d=4,o=5,b=45:32p,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#.6,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#6";
+const char *tom = "TakeOnMe:d=4,o=4,b=210:8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5,8f#5,8e5,8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5";
 void displaysensordata() {
 
   int le;
@@ -84,6 +85,10 @@ void blueListen(char * message) {
     }
     else if(strcmp(message, "ping\r\n") == 0) {
       bprintf(uart1, "pong", 27);
+  } else if(strcmp(message, "playSW\r\n") == 0) {
+	speakerPlayRtttl(starwars);
+  } else if(strcmp(message, "playTOM\r\n") == 0) {
+  	speakerPlayRtttl(tom);  
   }
 }
 
@@ -94,9 +99,6 @@ void blueListen(char * message) {
 void operatorControl() {
 	hc05Init(1, false);
 	blisten(1, blueListen);
-
-	const char *song = "StarWars:d=4,o=5,b=45:32p,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#.6,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#6";
-	speakerPlayRtttl (song)
 	printf("crap");
 	int downshift = 1;
 	bool lastButton6D = 0;
