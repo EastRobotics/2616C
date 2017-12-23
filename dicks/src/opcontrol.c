@@ -51,7 +51,9 @@
 void hc05Init(char uart, bool atMode);
 
 char *bluetoothRead(char uart);
-
+const char *starwars = "StarWars:d=4,o=5,b=45:32p,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#.6,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#6";
+const char *tom = "TakeOnMe:d=4,o=4,b=210:8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5,8f#5,8e5,8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5";
+const char *jeopardy = "Jeopardy:d=4,o=6,b=160:c,f,c,f5,c,f,2c,c,f,c,f,a.,8g,8f,8e,8d,8c#,c,f,c,f5,c,f,2c,f.,8d,c,a#5,a5,g5,f5,p,d#,g#,d#,g#5,d#,g#,2d#,d#,g#,d#,g#,c.7,8a#,8g#,8g,8f,8e,d#,g#,d#,g#5,d#,g#,2d#,g#.,8f,d#,c#,c,p,a#5,p,g#.5,d#,g#";
 void displaysensordata() {
 
   int le;
@@ -84,6 +86,12 @@ void blueListen(char * message) {
     }
     else if(strcmp(message, "ping\r\n") == 0) {
       bprintf(uart1, "pong", 27);
+  } else if(strcmp(message, "playSW\r\n") == 0) {
+	speakerPlayRtttl(starwars);
+  } else if(strcmp(message, "playTOM\r\n") == 0) {
+  	speakerPlayRtttl(tom);  
+  } else if(strcmp(message, "playJPRDY\r\n") == 0){
+  	  speakerPlayRtttl(jeopardy);
   }
 }
 
@@ -94,7 +102,6 @@ void blueListen(char * message) {
 void operatorControl() {
 	hc05Init(1, false);
 	blisten(1, blueListen);
-
 	printf("crap");
 	int downshift = 1;
 	bool lastButton6D = 0;
