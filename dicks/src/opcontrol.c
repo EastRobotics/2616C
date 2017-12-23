@@ -42,10 +42,10 @@
 #define strafe threshold(X)
 #define rotate threshold(R)
 #define rotateSlave threshold(slaveR)
-#define lift joystickGetAnalog(2,3)
+#define lift -threshold(joystickGetAnalog(2,3))
 
-#define claw joystickGetDigital(2, 6, JOY_UP)?-127:(joystickGetDigital(2, 6, JOY_DOWN)?127:0)
-#define swing joystickGetAnalog(2,2)
+#define claw joystickGetDigital(2, 6, JOY_UP)?127:(joystickGetDigital(2, 6, JOY_DOWN)?-127:0)
+#define swing -threshold(joystickGetAnalog(2,1))
 #define grabbyMcGrabberson joystickGetDigital(1, 7, JOY_DOWN)?127:(joystickGetDigital(1, 7, JOY_RIGHT)?-127:0)
 
 void hc05Init(char uart, bool atMode);
@@ -69,7 +69,7 @@ void displaysensordata() {
   bprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
 
     bprintf(uart1, " \r\n \r\n \r\n",27);
-      delay(1000);
+      delay(100);
 }
 
 
@@ -80,7 +80,7 @@ void blueListen(char * message) {
     if (strcmp(message, "reset\r\n") == 0) {
       analogCalibrate(LINE_TRACKER_PORT);
       fprint("Reset Sensor\r\n", uart1);
-      delay(2000);
+      delay(200);
     }
     else if(strcmp(message, "ping\r\n") == 0) {
       bprintf(uart1, "pong", 27);
@@ -101,14 +101,14 @@ void operatorControl() {
 	bool lastButton6U = 0;
 	while (1) {
 		displaysensordata();
-		motorSet(1, claw);
+		motorSet(1, swing);
 		motorSet(2, mogoVal_actual);
 		motorSet(3, (drive + rotate)/downshift);
 		motorSet(4, (drive + rotate)/downshift);
 		motorSet(5, lift);
 		motorSet(6, lift);
 		motorSet(7, (-drive + rotate)/downshift);
-		motorSet(8, swing);
+		motorSet(8, claw);
 		motorSet(9, (-drive + rotate)/downshift);
 		motorSet(10, grabbyMcGrabberson);
 
