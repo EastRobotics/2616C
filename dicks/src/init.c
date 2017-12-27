@@ -38,8 +38,10 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
-  mogoEnc = encoderInit(1,2,false);
-
-  liftEnc = encoderInit (3,4,false);
-  dexterUS = ultrasonicInit(6, 5);
+  mogoEnc = encoderInit(1, 2, false);
+  liftEnc = encoderInit (3, 4, false);
+  swingEnc = encoderInit(5, 6, false);
+  dexterUS = ultrasonicInit(11, 12);
+  liftUS = ultrasonicInit(7,8);
+  gyro = gyroInit(1, 196);
 }

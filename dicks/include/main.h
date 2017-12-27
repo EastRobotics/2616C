@@ -117,9 +117,12 @@ void operatorControl();
 #define bprintf(uart,format, args...) fprintf(uart, format, args)
 void blisten(char, void(*)(char*));
 #define LINE_TRACKER_PORT 1
+Gyro gyROH;
 Ultrasonic dexterUS;
+Ultrasonic liftUS;
 Encoder liftEnc;
 Encoder mogoEnc;
+Encoder swingEnc;
 // End C++ export structure
 #ifdef __cplusplus
 }

@@ -56,17 +56,19 @@ const char *tom = "TakeOnMe:d=4,o=4,b=210:8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5
 const char *jeopardy = "Jeopardy:d=4,o=6,b=160:c,f,c,f5,c,f,2c,c,f,c,f,a.,8g,8f,8e,8d,8c#,c,f,c,f5,c,f,2c,f.,8d,c,a#5,a5,g5,f5,p,d#,g#,d#,g#5,d#,g#,2d#,d#,g#,d#,g#,c.7,8a#,8g#,8g,8f,8e,d#,g#,d#,g#5,d#,g#,2d#,g#.,8f,d#,c#,c,p,a#5,p,g#.5,d#,g#";
 void displaysensordata() {
 
-  int le;
-  int us;
+  // int le;
+  // int us;
   unsigned int bt;
 
 //  bprintf(uart1, "%c[2J", 27);  //Clear Screen
 //  bprintf(uart1, "%c[H", 27);   // Top left corner
   bprintf(uart1, " \r\n \r\n \r\n",27);   // Top left corner
-  us = ultrasonicGet(dexterUS);
-  bprintf(uart1, "Ultrasonic: %d\n", us);
-  le = encoderGet(liftEnc);
-  bprintf(uart1, "Lift Encoder: %d\n", le);
+  bprintf(uart1, "Gyroscope: %d\n", gyroGet(gyROH));
+  bprintf(uart1, "Odom Ultrasonic: %d\n", ultrasonicGet(dexterUS));
+  bprintf(uart1, "Mobile Goal Encoder: %d\n\n", encoderGet(mogoEnc));
+  bprintf(uart1, "Lift Encoder: %d\n", encoderGet(liftEnc));
+  bprintf(uart1, "Swing Encoder: %d\n", encoderGet(swingEnc));
+  bprintf(uart1, "Lift Ultrasonic: %d\n", ultrasonicGet(liftUS));
   bt = powerLevelMain();
   bprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
 
@@ -89,7 +91,7 @@ void blueListen(char * message) {
   } else if(strcmp(message, "playSW\r\n") == 0) {
 	speakerPlayRtttl(starwars);
   } else if(strcmp(message, "playTOM\r\n") == 0) {
-  	speakerPlayRtttl(tom);  
+  	speakerPlayRtttl(tom);
   } else if(strcmp(message, "playJPRDY\r\n") == 0){
   	  speakerPlayRtttl(jeopardy);
   }
@@ -106,8 +108,8 @@ void operatorControl() {
 	int downshift = 1;
 	bool lastButton6D = 0;
 	bool lastButton6U = 0;
+  taskRunLoop(displaysensordata, 2000);
 	while (1) {
-		displaysensordata();
 		motorSet(1, swing);
 		motorSet(2, mogoVal_actual);
 		motorSet(3, (drive + rotate)/downshift);
