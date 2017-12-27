@@ -112,8 +112,29 @@ void initialize();
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
-void operatorControl();
 
+void clawControl(void*);
+void runDrive(void*);
+void driveControl(void*);
+void liftControl(void*);
+void runLift(int);
+void runClaw(int);
+
+typedef struct {float x_pos; float y_pos;} BotLocation;
+void refreshBotLocation(BotLocation *);
+typedef enum {pos = 1, neg = -1} dircoeff;
+void initOdometry(/*Encoder,*/ Encoder, float, float, float, /*dircoeff,*/ dircoeff);
+Gyro gyro;
+Encoder encOdomY;
+Encoder encClaw;
+Encoder getEncoderClaw();
+Encoder getEncoderOdomY();
+int r, y;
+void runLCD(void*);
+BotLocation botLoc;
+void operatorControl();
+void turnToHeading(int);
+void initLCDFromLCDc();
 // End C++ export structure
 #ifdef __cplusplus
 }

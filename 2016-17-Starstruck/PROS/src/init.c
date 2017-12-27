@@ -12,14 +12,9 @@
 
 #include "main.h"
 
-/*
- * Runs pre-initialization code. This function will be started in kernel mode one time while the
- * VEX Cortex is starting up. As the scheduler is still paused, most API functions will fail.
- *
- * The purpose of this function is solely to set the default pin modes (pinMode()) and port
- * states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely
- * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
- */
+FILE *LCD = uart1;
+Encoder getEncoderOdomY() {return encOdomY;}
+Encoder getEncoderClaw() { return encClaw;}
 void initializeIO() {
 }
 
@@ -37,4 +32,15 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
+  //
+  // lcdClear(uart1);
+  // lcdInit(uart1);
+  // lcdSetBacklight(uart1, true);
+  // lcdSetBacklight(uart1, false);
+  initLCDFromLCDc();
+  speakerInit();
+  gyro = gyroInit(aGyroscope, 0);
+  encClaw = encoderInit(dClawEncoder_TOP, dClawEncoder_BOT, false);
+  encOdomY = encoderInit(dOdomEncoder_YT, dOdomEncoder_YL, false);
+  speakerPlayRtttl("LiftBeep: d=32,o=5,b=108: d");
 }

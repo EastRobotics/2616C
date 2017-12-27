@@ -35,9 +35,9 @@ task driveWithController() {
 		case true:
 			speeds.transitionalVectorY = vexRT[Ch3];
 			speeds.rotationalVector = vexRT[Ch1];
-			FR = -speeds.transitionalVectorY + speeds.rotationalVector;
-			BR =  speeds.transitionalVectorY - speeds.rotationalVector;
-			FL = speeds.transitionalVectorY + speeds.rotationalVector;
+			FR = +speeds.transitionalVectorY - speeds.rotationalVector;
+			BR =  -speeds.transitionalVectorY + speeds.rotationalVector;
+			FL = +speeds.transitionalVectorY + speeds.rotationalVector;
 			BL =  -speeds.transitionalVectorY - speeds.rotationalVector;
 			if(vexRT[Btn8D]){
 				vectordrive = false;
@@ -51,10 +51,25 @@ task driveWithController() {
 }
 task drive() {
 	while(true) {
-		FR = -speeds.transitionalVectorY + speeds.rotationalVector;
-		BR =  speeds.transitionalVectorY - speeds.rotationalVector;
+		FR = speeds.transitionalVectorY - speeds.rotationalVector;
+		BR =  -speeds.transitionalVectorY + speeds.rotationalVector;
 		FL = speeds.transitionalVectorY + speeds.rotationalVector;
 		BL =  -speeds.transitionalVectorY - speeds.rotationalVector;
 	//	writeDebugStreamLine("FR %i | BR %i | FL %i | BL %i", FR, BR, FL, BL);
+	}
+}
+void moveToPosition(float position) {
+	if(position / -1 == 1) {
+		speeds.transitionalVectorY = -63;
+		while(botLoc.y_pos > position) {
+			get_botlocation(botLoc);
+		}
+		speeds.transitionalVectorY = 0;
+	} else {
+			speeds.transitionalVectorY = 63;
+			while(botLoc.y_pos < position) {
+				get_botlocation(botLoc);
+			}
+			speeds.transitionalVectorY = 0;
 	}
 }
