@@ -112,6 +112,8 @@ void initialize();
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
+
+ void autoGrab(void*);
 void operatorControl();
 
 #define bprintf(uart,format, args...) fprintf(uart, format, args)

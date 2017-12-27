@@ -34,14 +34,14 @@
 #define mogoVal joystickGetAnalog('2','3')
 #define mogoVal_actual joystickGetDigital(1, 5, JOY_UP)?-127:(joystickGetDigital(1, 5, JOY_DOWN)?127:0)
 
-#define Y joystickGetAnalog(1, 3)
-#define R joystickGetAnalog(1, 1)
-#define X joystickGetAnalog(1, 4)
-#define slaveR joystickGetAnalog(2, 1)
-#define drive threshold(Y)
-#define strafe threshold(X)
-#define rotate threshold(R)
-#define rotateSlave threshold(slaveR)
+#define MASTER_CH3 joystickGetAnalog(1, 3)
+#define drive threshold(MASTER_CH3)
+
+// #define MASTER_CH4 joystickGetAnalog(1, 4)
+// #define strafe threshold(MASTER_CH4)
+
+#define MASTER_CH1 joystickGetAnalog(1, 1)
+#define rotate threshold(MASTER_CH1)
 #define lift -threshold(joystickGetAnalog(2,3))
 
 #define claw joystickGetDigital(2, 6, JOY_UP)?127:(joystickGetDigital(2, 6, JOY_DOWN)?-127:0)
@@ -56,6 +56,7 @@ const char *tom = "TakeOnMe:d=4,o=4,b=210:8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5
 const char *jeopardy = "Jeopardy:d=4,o=6,b=160:c,f,c,f5,c,f,2c,c,f,c,f,a.,8g,8f,8e,8d,8c#,c,f,c,f5,c,f,2c,f.,8d,c,a#5,a5,g5,f5,p,d#,g#,d#,g#5,d#,g#,2d#,d#,g#,d#,g#,c.7,8a#,8g#,8g,8f,8e,d#,g#,d#,g#5,d#,g#,2d#,g#.,8f,d#,c#,c,p,a#5,p,g#.5,d#,g#";
 void displaysensordata() {
 
+<<<<<<< HEAD
   // int le;
   // int us;
   unsigned int bt;
@@ -72,6 +73,21 @@ void displaysensordata() {
   bt = powerLevelMain();
   bprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
 
+=======
+    int le;
+    int us;
+    unsigned int bt;
+
+//  bprintf(uart1, "%c[2J", 27);  //Clear Screen
+//  bprintf(uart1, "%c[H", 27);   // Top left corner
+    bprintf(uart1, " \r\n \r\n \r\n",27);   // Top left corner
+    us = ultrasonicGet(dexterUS);
+    bprintf(uart1, "Ultrasonic: %d\n", us);
+    le = encoderGet(liftEnc);
+    bprintf(uart1, "Lift Encoder: %d\n", le);
+    bt = powerLevelMain();
+    bprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
+>>>>>>> 76db57f05808cb36859577ea262a30db3637993d
     bprintf(uart1, " \r\n \r\n \r\n",27);
       delay(100);
 }
@@ -82,10 +98,19 @@ void blueListen(char * message) {
     printf("|%s|\n", message);
     printf("%d\n", strcmp(message, "reset\r\n"));
     if (strcmp(message, "reset\r\n") == 0) {
-      analogCalibrate(LINE_TRACKER_PORT);
-      fprint("Reset Sensor\r\n", uart1);
-      delay(200);
+        analogCalibrate(LINE_TRACKER_PORT);
+        fprint("Reset Sensor\r\n", uart1);
+        delay(200);
+    } else if(strcmp(message, "ping\r\n") == 0) {
+        bprintf(uart1, "pong", 27);
+    } else if(strcmp(message, "playSW\r\n") == 0) {
+	     speakerPlayRtttl(starwars);
+    } else if(strcmp(message, "playTOM\r\n") == 0) {
+  	   speakerPlayRtttl(tom);
+    } else if(strcmp(message, "playJPRDY\r\n") == 0){
+  	   speakerPlayRtttl(jeopardy);
     }
+<<<<<<< HEAD
     else if(strcmp(message, "ping\r\n") == 0) {
       bprintf(uart1, "pong", 27);
   } else if(strcmp(message, "playSW\r\n") == 0) {
@@ -95,6 +120,8 @@ void blueListen(char * message) {
   } else if(strcmp(message, "playJPRDY\r\n") == 0){
   	  speakerPlayRtttl(jeopardy);
   }
+=======
+>>>>>>> 76db57f05808cb36859577ea262a30db3637993d
 }
 
 
@@ -102,6 +129,7 @@ void blueListen(char * message) {
 
 
 void operatorControl() {
+<<<<<<< HEAD
 	hc05Init(1, false);
 	blisten(1, blueListen);
 	printf("crap");
@@ -134,4 +162,37 @@ void operatorControl() {
 			lastButton6U = joystickGetDigital(1, 6, JOY_UP);
 		}
 	}
+=======
+hc05Init(1, false);
+blisten(1, blueListen);
+printf("crap");
+int downshift = 1;
+bool lastButton6D = 0;
+bool lastButton6U = 0;
+    while (1) {
+        displaysensordata();
+		    motorSet(1, swing);
+		    motorSet(2, mogoVal_actual);
+        motorSet(3, (drive + rotate)/downshift);
+        motorSet(4, (drive + rotate)/downshift);
+        motorSet(5, lift);
+        motorSet(6, lift);
+        motorSet(7, (-drive + rotate)/downshift);
+		    motorSet(8, claw);
+        motorSet(9, (-drive + rotate)/downshift);
+        motorSet(10, grabbyMcGrabberson);
+		    if(joystickGetDigital(1, 6, JOY_DOWN)) {
+			       if(lastButton6D & joystickGetDigital(1, 6, JOY_DOWN)) {
+				           downshift = 3;
+			       }
+			       lastButton6D = joystickGetDigital(1, 6, JOY_DOWN);
+		    }
+		    if(joystickGetDigital(1, 6, JOY_UP)) {
+			       if(lastButton6U & joystickGetDigital(1, 6, JOY_UP)) {
+				           downshift = 1;
+			       }
+			       lastButton6U = joystickGetDigital(1, 6, JOY_UP);
+		    }
+    }
+>>>>>>> 76db57f05808cb36859577ea262a30db3637993d
 }
