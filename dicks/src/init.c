@@ -22,6 +22,7 @@
  */
 void initializeIO() {
 //  standaloneModeEnable();
+ hc05Init(1, false);
 }
 
 /*
@@ -43,5 +44,6 @@ void initialize() {
   swingEnc = encoderInit(5, 6, false);
   dexterUS = ultrasonicInit(11, 12);
   liftUS = ultrasonicInit(7,8);
-  gyro = gyroInit(1, 196);
+  speakerInit();
+//  gyro = gyroInit(1, 196);
 }

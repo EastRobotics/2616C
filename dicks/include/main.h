@@ -80,6 +80,7 @@ void autonomous();
  * states (digitalWrite()) of limit switches, push buttons, and solenoids. It can also safely
  * configure a UART port (usartOpen()) but cannot set up an LCD (lcdInit()).
  */
+void hc05Init(char, bool);
 void initializeIO();
 /**
  * Runs user initialization code. This function will be started in its own task with the default
@@ -112,12 +113,13 @@ void initialize();
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
-
- void autoGrab(void*);
+void autoGrab(void*);
 void operatorControl();
 
 #define bprintf(uart,format, args...) fprintf(uart, format, args)
+void bprint(char, const char *);
 void blisten(char, void(*)(char*));
+void bluelisten(char *);
 #define LINE_TRACKER_PORT 1
 Gyro gyROH;
 Ultrasonic dexterUS;
@@ -125,6 +127,7 @@ Ultrasonic liftUS;
 Encoder liftEnc;
 Encoder mogoEnc;
 Encoder swingEnc;
+TaskHandle btask;
 // End C++ export structure
 #ifdef __cplusplus
 }

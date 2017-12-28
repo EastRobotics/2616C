@@ -3,6 +3,7 @@
 void (*callback)(char*);
 FILE *uFile;
 
+
 // Init a typical hc05 bluetooth module
 void hc05Init(char uart, bool atMode) {
   FILE *uFile = uart == 1 ? uart1 : uart2;
@@ -24,11 +25,14 @@ void bprint(char uart, const char *message) {
 }
 
 void blistenTask(void * ignored) {
-  char buffer[100];
-  while (true) {
+
+//  FILE *uFile =  uart1 ;
+  while (1) {
+    print("duh\n");
     while (fcount(uFile) < 1) {
       delay(500);
     } // Long delay, don't need to be snappy
+      char buffer[100];
     callback(fgets(buffer,100, uFile));
   //  printf("%s",buffer);
 
@@ -38,7 +42,8 @@ void blistenTask(void * ignored) {
 void blisten(char uart, void (*_callback)(char*)) {
   uFile = uart == 1 ? uart1 : uart2;
   callback = _callback;
-  taskCreate(blistenTask, TASK_DEFAULT_STACK_SIZE, NULL,
+  printf("Junk");
+  btask = taskCreate(blistenTask, TASK_DEFAULT_STACK_SIZE, NULL,
              TASK_PRIORITY_DEFAULT);
 }
 

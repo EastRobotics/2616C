@@ -51,77 +51,109 @@
 void hc05Init(char uart, bool atMode);
 
 char *bluetoothRead(char uart);
-const char *starwars = "StarWars:d=4,o=5,b=45:32p,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#.6,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#6";
-const char *tom = "TakeOnMe:d=4,o=4,b=210:8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5,8f#5,8e5,8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5";
-const char *jeopardy = "Jeopardy:d=4,o=6,b=160:c,f,c,f5,c,f,2c,c,f,c,f,a.,8g,8f,8e,8d,8c#,c,f,c,f5,c,f,2c,f.,8d,c,a#5,a5,g5,f5,p,d#,g#,d#,g#5,d#,g#,2d#,d#,g#,d#,g#,c.7,8a#,8g#,8g,8f,8e,d#,g#,d#,g#5,d#,g#,2d#,g#.,8f,d#,c#,c,p,a#5,p,g#.5,d#,g#";
+#define starwars "StarWars: d=4,o=5,b=90: 32p,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#.6,32f#,32f#,32f#,8b.,8f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32c#6,8b.6,16f#.6,32e6,32d#6,32e6,8c#6"
+#define tom "TakeOnMe: d=4,o=4,b=190: 8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5,8f#5,8e5,8f#5,8f#5,8f#5,8d5,8p,8b,8p,8e5,8p,8e5,8p,8e5,8g#5,8g#5,8a5,8b5,8a5,8a5,8a5,8e5,8p,8d5,8p,8f#5,8p,8f#5,8p,8f#5,8e5,8e5"
+#define jeopardy "Jeopardy: d=4,o=6,b=160: c,f,c,f5,c,f,2c,c,f,c,f,a.,8g,8f,8e,8d,8c#,c,f,c,f5,c,f,2c,f.,8d,c,a#5,a5,g5,f5,p,d#,g#,d#,g#5,d#,g#,2d#,d#,g#,d#,g#,c.7,8a#,8g#,8g,8f,8e,d#,g#,d#,g#5,d#,g#,2d#,g#.,8f,d#,c#,c,p,a#5,p,g#.5,d#,g#"
+TaskHandle swTH;
+TaskHandle tomTH;
+TaskHandle jprdyTH;
 void displaysensordata() {
 
-<<<<<<< HEAD
   // int le;
   // int us;
   unsigned int bt;
 
 //  bprintf(uart1, "%c[2J", 27);  //Clear Screen
 //  bprintf(uart1, "%c[H", 27);   // Top left corner
-  bprintf(uart1, " \r\n \r\n \r\n",27);   // Top left corner
-  bprintf(uart1, "Gyroscope: %d\n", gyroGet(gyROH));
-  bprintf(uart1, "Odom Ultrasonic: %d\n", ultrasonicGet(dexterUS));
-  bprintf(uart1, "Mobile Goal Encoder: %d\n\n", encoderGet(mogoEnc));
-  bprintf(uart1, "Lift Encoder: %d\n", encoderGet(liftEnc));
-  bprintf(uart1, "Swing Encoder: %d\n", encoderGet(swingEnc));
-  bprintf(uart1, "Lift Ultrasonic: %d\n", ultrasonicGet(liftUS));
+  fprintf(uart1, " \r\n \r\n \r\n");   // Top left corner
+  fprintf(uart1, "Gyroscope: %d\n", gyroGet(gyROH));
+  fprintf(uart1, "Odom Ultrasonic: %d\n", ultrasonicGet(dexterUS));
+  fprintf(uart1, "Mobile Goal Encoder: %d\n\n", encoderGet(mogoEnc));
+  fprintf(uart1, "Lift Encoder: %d\n", encoderGet(liftEnc));
+  fprintf(uart1, "Swing Encoder: %d\n", encoderGet(swingEnc));
+  fprintf(uart1, "Lift Ultrasonic: %d\n", ultrasonicGet(liftUS));
   bt = powerLevelMain();
-  bprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
+  fprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
 
-=======
-    int le;
-    int us;
-    unsigned int bt;
-
-//  bprintf(uart1, "%c[2J", 27);  //Clear Screen
-//  bprintf(uart1, "%c[H", 27);   // Top left corner
-    bprintf(uart1, " \r\n \r\n \r\n",27);   // Top left corner
-    us = ultrasonicGet(dexterUS);
-    bprintf(uart1, "Ultrasonic: %d\n", us);
-    le = encoderGet(liftEnc);
-    bprintf(uart1, "Lift Encoder: %d\n", le);
-    bt = powerLevelMain();
-    bprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
->>>>>>> 76db57f05808cb36859577ea262a30db3637993d
-    bprintf(uart1, " \r\n \r\n \r\n",27);
+  fprintf(uart1, " \r\n \r\n \r\n");
       delay(100);
 }
-
+void swMusac(void* ignore) {
+  speakerPlayRtttl(starwars);
+}
+void tomMusac(void* ignore) {
+  speakerPlayRtttl(tom);
+}
+void jprdyMusac(void* ignore) {
+  speakerPlayRtttl(jeopardy);
+}
 
 void blueListen(char * message) {
-    printf("%x %x %x %x %x %x %x %x\n", message[0], message[1], message[2], message[3], message[4], message[5], message[6], message[7]);
-    printf("|%s|\n", message);
-    printf("%d\n", strcmp(message, "reset\r\n"));
+    fprintf(uart1, "%x %x %x %x %x %x %x %x\r\n", message[0], message[1], message[2], message[3], message[4], message[5], message[6], message[7]);
+    //fprintf(uart1, "|%s|\n", message);
+    //fprintf(uart1,"%d\n", strcmp(message, "reset\r\n"));
     if (strcmp(message, "reset\r\n") == 0) {
         analogCalibrate(LINE_TRACKER_PORT);
+        encoderReset(liftEnc);
+        encoderReset(swingEnc);
+        encoderReset(mogoEnc);
+      //gyroReset(gyro);
         fprint("Reset Sensor\r\n", uart1);
-        delay(200);
-    } else if(strcmp(message, "ping\r\n") == 0) {
-        bprintf(uart1, "pong", 27);
-    } else if(strcmp(message, "playSW\r\n") == 0) {
-	     speakerPlayRtttl(starwars);
-    } else if(strcmp(message, "playTOM\r\n") == 0) {
-  	   speakerPlayRtttl(tom);
-    } else if(strcmp(message, "playJPRDY\r\n") == 0){
-  	   speakerPlayRtttl(jeopardy);
+
+
     }
-<<<<<<< HEAD
-    else if(strcmp(message, "ping\r\n") == 0) {
-      bprintf(uart1, "pong", 27);
-  } else if(strcmp(message, "playSW\r\n") == 0) {
-	speakerPlayRtttl(starwars);
-  } else if(strcmp(message, "playTOM\r\n") == 0) {
-  	speakerPlayRtttl(tom);
-  } else if(strcmp(message, "playJPRDY\r\n") == 0){
-  	  speakerPlayRtttl(jeopardy);
-  }
-=======
->>>>>>> 76db57f05808cb36859577ea262a30db3637993d
+    if(strncmp(message, "ping\r\n",4) == 0) {
+        fprintf(uart1, "pong");
+    }
+    if(strncmp(message, "sw\r\n",2) == 0) {
+      fprintf(uart1, "Now Playing \'The Imperial March\' by John Williams");
+      if (swTH != NULL) {
+          taskDelete(swTH);
+      }
+      speakerShutdown();
+      delay(200);
+      speakerInit();
+      swTH = taskCreate(swMusac, TASK_DEFAULT_STACK_SIZE, NULL,
+                 TASK_PRIORITY_DEFAULT);
+    }
+    if(strncmp(message, "tom\r\n",3) == 0) {
+      fprintf(uart1, "Now Playing \'Take on Me\' by a-ha");
+      if (tomTH != NULL) {
+          taskDelete(tomTH);
+      }
+      speakerShutdown();
+      delay(200);
+      speakerInit();
+       tomTH = taskCreate(tomMusac, TASK_DEFAULT_STACK_SIZE, NULL,
+                  TASK_PRIORITY_DEFAULT);
+    }
+    if(strncmp(message, "jprdy\r\n",5) == 0){
+      fprintf(uart1, "Now Playing the Jeopardy Theme");
+      if(jprdyTH != NULL) {
+          taskDelete(jprdyTH);
+      }
+      speakerShutdown();
+      delay(200);
+      speakerInit();
+      jprdyTH = taskCreate(jprdyMusac, TASK_DEFAULT_STACK_SIZE, NULL,
+                 TASK_PRIORITY_DEFAULT);
+    }
+    if (strncmp(message, "ssd\r\n",3) == 0) {
+      fprintf(uart1, "Speaker Shutdown Requested");
+      if (swTH != NULL) {
+          taskDelete(swTH);
+      }
+      if (tomTH != NULL) {
+          taskDelete(tomTH);
+      }
+      if(jprdyTH != NULL) {
+          taskDelete(jprdyTH);
+      }
+      speakerShutdown();
+      delay(200);
+      speakerInit();
+    }
+    delay(200);
 }
 
 
@@ -129,8 +161,8 @@ void blueListen(char * message) {
 
 
 void operatorControl() {
-<<<<<<< HEAD
-	hc05Init(1, false);
+//TaskHandle dtask;
+
 	blisten(1, blueListen);
 	printf("crap");
 	int downshift = 1;
@@ -138,6 +170,7 @@ void operatorControl() {
 	bool lastButton6U = 0;
   taskRunLoop(displaysensordata, 2000);
 	while (1) {
+  //  printf("%d %d\r\n", taskGetState ( btask ),taskGetState ( dtask ));
 		motorSet(1, swing);
 		motorSet(2, mogoVal_actual);
 		motorSet(3, (drive + rotate)/downshift);
@@ -161,38 +194,6 @@ void operatorControl() {
 			}
 			lastButton6U = joystickGetDigital(1, 6, JOY_UP);
 		}
+    delay(20);
 	}
-=======
-hc05Init(1, false);
-blisten(1, blueListen);
-printf("crap");
-int downshift = 1;
-bool lastButton6D = 0;
-bool lastButton6U = 0;
-    while (1) {
-        displaysensordata();
-		    motorSet(1, swing);
-		    motorSet(2, mogoVal_actual);
-        motorSet(3, (drive + rotate)/downshift);
-        motorSet(4, (drive + rotate)/downshift);
-        motorSet(5, lift);
-        motorSet(6, lift);
-        motorSet(7, (-drive + rotate)/downshift);
-		    motorSet(8, claw);
-        motorSet(9, (-drive + rotate)/downshift);
-        motorSet(10, grabbyMcGrabberson);
-		    if(joystickGetDigital(1, 6, JOY_DOWN)) {
-			       if(lastButton6D & joystickGetDigital(1, 6, JOY_DOWN)) {
-				           downshift = 3;
-			       }
-			       lastButton6D = joystickGetDigital(1, 6, JOY_DOWN);
-		    }
-		    if(joystickGetDigital(1, 6, JOY_UP)) {
-			       if(lastButton6U & joystickGetDigital(1, 6, JOY_UP)) {
-				           downshift = 1;
-			       }
-			       lastButton6U = joystickGetDigital(1, 6, JOY_UP);
-		    }
-    }
->>>>>>> 76db57f05808cb36859577ea262a30db3637993d
 }
