@@ -113,6 +113,41 @@ void initialize();
  *
  * This task should never exit; it should end with some kind of infinite loop, even if empty.
  */
+#define CLAW_LIMIT 9
+ #define liftPortCount 2
+ typedef struct {
+   unsigned char mtrPort[liftPortCount];
+   int speed;
+   int encActualPos;
+   int encDesiredPos;
+   int usActualPos;
+   int usLimit;
+   bool exec;
+   int encLimit;
+   unsigned int timeout;
+   char message[25];
+   int coneDetectThreshold;
+   bool autostack;
+ } LiftData;
+ typedef struct {
+   unsigned char mtrPort;
+   int speed;
+   int actualPos;
+   int desiredPos;
+   int liftSwingOutEncMin; // minimum value in order for the lift to pass by the mobile goal holder safely
+   int encLimit;
+   bool exec;
+   unsigned int timeout;
+
+   char message[25];
+ } SwingData;
+ LiftData liftControl;
+ SwingData swingControl;
+ bool bluetoothout;
+ void initLiftData(void);
+ void initSwingData();
+void lift(void*);
+void swing(void*);
 void autoGrab(void*);
 void operatorControl();
 

@@ -42,12 +42,13 @@
 
 #define MASTER_CH1 joystickGetAnalog(1, 1)
 #define rotate threshold(MASTER_CH1)
-#define lift -threshold(joystickGetAnalog(2,3))
+#define liftVal -threshold(joystickGetAnalog(2,3))
 
 #define claw joystickGetDigital(2, 6, JOY_UP)?127:(joystickGetDigital(2, 6, JOY_DOWN)?-127:0)
-#define swing -threshold(joystickGetAnalog(2,1))
+#define swingVal -threshold(joystickGetAnalog(2,1))
 #define grabbyMcGrabberson joystickGetDigital(1, 7, JOY_DOWN)?127:(joystickGetDigital(1, 7, JOY_RIGHT)?-127:0)
 
+#define grabButton joystickGetDigital(2, 7, JOY_UP)
 void hc05Init(char uart, bool atMode);
 
 char *bluetoothRead(char uart);
@@ -57,12 +58,14 @@ char *bluetoothRead(char uart);
 TaskHandle swTH;
 TaskHandle tomTH;
 TaskHandle jprdyTH;
+TaskHandle liftTH, swingTH, autoGrabTH;
+
 void displaysensordata() {
 
   // int le;
   // int us;
   unsigned int bt;
-
+if (bluetoothout){
 //  bprintf(uart1, "%c[2J", 27);  //Clear Screen
 //  bprintf(uart1, "%c[H", 27);   // Top left corner
   fprintf(uart1, " \r\n \r\n \r\n");   // Top left corner
@@ -74,8 +77,10 @@ void displaysensordata() {
   fprintf(uart1, "Lift Ultrasonic: %d\n", ultrasonicGet(liftUS));
   bt = powerLevelMain();
   fprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
+  fprintf(uart1, "Claw Limit Switch: %s\n", (digitalRead(CLAW_LIMIT) == LOW)?"Pressed":"Released");
 
   fprintf(uart1, " \r\n \r\n \r\n");
+}
       delay(100);
 }
 void swMusac(void* ignore) {
@@ -104,6 +109,18 @@ void blueListen(char * message) {
     }
     if(strncmp(message, "ping\r\n",4) == 0) {
         fprintf(uart1, "pong");
+    }
+    if(strncmp(message, "blueon\r\n",6) == 0) {
+        bluetoothout = true;
+        fprintf(uart1, "Bluetooth On");
+    }
+    if(strncmp(message, "blueoff\r\n",7) == 0) {
+        bluetoothout = false;
+        fprintf(uart1, "Bluetooth Off");
+    }
+    if(strncmp(message, "lreset\r\n",7) == 0) {
+                encoderReset(liftEnc);
+                fprintf(uart1, "Lift Encoder Reset");
     }
     if(strncmp(message, "sw\r\n",2) == 0) {
       fprintf(uart1, "Now Playing \'The Imperial March\' by John Williams");
@@ -162,29 +179,65 @@ void blueListen(char * message) {
 
 void operatorControl() {
 //TaskHandle dtask;
-
+  liftTH = taskCreate(lift, TASK_DEFAULT_STACK_SIZE, NULL,
+           TASK_PRIORITY_DEFAULT);
+  swingTH = taskCreate(swing, TASK_DEFAULT_STACK_SIZE, NULL,
+           TASK_PRIORITY_DEFAULT);
+  bluetoothout = true;
 	blisten(1, blueListen);
 	printf("crap");
 	int downshift = 1;
-	bool lastButton6D = 0;
-	bool lastButton6U = 0;
+	bool lastButton6D = false;
+	bool lastButton6U = false;
+  bool liftControlBtnPushed = false;
+  bool autolift = true;
   taskRunLoop(displaysensordata, 2000);
 	while (1) {
   //  printf("%d %d\r\n", taskGetState ( btask ),taskGetState ( dtask ));
-		motorSet(1, swing);
+  if (!autolift) {
+    motorSet(1, swingVal);
+  }
+
 		motorSet(2, mogoVal_actual);
 		motorSet(3, (drive + rotate)/downshift);
 		motorSet(4, (drive + rotate)/downshift);
-		motorSet(5, lift);
-		motorSet(6, lift);
+    if (!autolift) {
+      motorSet(5, liftVal);
+  		motorSet(6, liftVal);
+    }
 		motorSet(7, (-drive + rotate)/downshift);
-		motorSet(8, claw);
+		if (!autolift) {
+      motorSet(8, claw);
+    }
 		motorSet(9, (-drive + rotate)/downshift);
 		motorSet(10, grabbyMcGrabberson);
+    if (grabButton) {
+      autoGrabTH = taskCreate(autoGrab, TASK_DEFAULT_STACK_SIZE, NULL,
+               TASK_PRIORITY_DEFAULT);
 
+    }
+      if (liftControlBtnPushed & joystickGetDigital('2','8',JOY_RIGHT)) {
+
+        //TODO make a method for this
+        if (liftTH != NULL) {
+          if (taskGetState(liftTH) == TASK_SUSPENDED) {
+            autolift = true;
+            taskResume(liftTH);
+            taskResume(swingTH);
+          } else {
+            autolift = false;
+            liftControl.exec = false;
+            swingControl.exec = false;
+            taskSuspend(liftTH);
+            taskSuspend(swingTH);
+          }
+        }
+
+      }
+    liftControlBtnPushed = joystickGetDigital('2','8',JOY_RIGHT);
 		if(joystickGetDigital(1, 6, JOY_DOWN)) {
 			if(lastButton6D & joystickGetDigital(1, 6, JOY_DOWN)) {
-				downshift = 3;
+				downshift = 2;
 			}
 			lastButton6D = joystickGetDigital(1, 6, JOY_DOWN);
 		}

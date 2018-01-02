@@ -23,6 +23,7 @@
 void initializeIO() {
 //  standaloneModeEnable();
  hc05Init(1, false);
+ pinMode(CLAW_LIMIT, INPUT);
 }
 
 /*
@@ -45,5 +46,8 @@ void initialize() {
   dexterUS = ultrasonicInit(11, 12);
   liftUS = ultrasonicInit(7,8);
   speakerInit();
+
 //  gyro = gyroInit(1, 196);
+  initLiftData();
+  initSwingData();
 }
