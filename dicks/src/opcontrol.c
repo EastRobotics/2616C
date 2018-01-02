@@ -77,6 +77,7 @@ if (bluetoothout){
   fprintf(uart1, "Lift Ultrasonic: %d\n", ultrasonicGet(liftUS));
   bt = powerLevelMain();
   fprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
+  fprintf(uart1, "Secondary Battery Voltage: %0.4fV\n", (float) analogRead(2) * 4.0 / 70);
   fprintf(uart1, "Claw Limit Switch: %s\n", (digitalRead(CLAW_LIMIT) == LOW)?"Pressed":"Released");
 
   fprintf(uart1, " \r\n \r\n \r\n");

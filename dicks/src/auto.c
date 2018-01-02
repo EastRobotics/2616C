@@ -27,5 +27,21 @@
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 void autonomous() {
-  
+int motorPorts[4] = {3, 4, 7, 9};
+motorSet(2, 127);
+while(encoderGet(mogoEnc) < 60) {};
+motorSet(2, 0);
+delay(200);
+    motorSet(3, 127);
+    motorSet(4, 127);
+    motorSet(7, -127);
+    motorSet(9, -127);
+    delay(1500);
+    for (int i = 0; i < 4; i++) {
+      motorSet(motorPorts[i], 0);
+    }
+
+    motorSet(2, -127);
+    while(encoderGet(mogoEnc) > 0) {};
+    motorSet(2, 0);
 }
