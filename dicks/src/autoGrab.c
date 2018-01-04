@@ -14,9 +14,9 @@ void initLiftData(void) {
 }
 void initSwingData(){
   swingControl.mtrPort = 1;
-  swingControl.speed = -63;
-  swingControl.encLimit = 200;
-  swingControl.liftSwingOutEncMin = 400;
+  swingControl.speed = -53;
+  swingControl.encLimit = 240;
+  swingControl.liftSwingOutEncMin = 220;
 }
 void setLiftMotors(void ){
   for (int m = 0; m < liftPortCount; m++) {
@@ -94,21 +94,21 @@ void swing(void* ignore) {
     }
       swingControl.actualPos = encoderGet(swingEnc);
 
-      delay(200);
+      delay(50);
   }
 }
 void autoGrab(void *ignore) {
   motorSet(8, -127);
   while(digitalRead(CLAW_LIMIT) == HIGH){}
   motorSet(8,0);
-  liftControl.encDesiredPos = 480;
+  liftControl.encDesiredPos = 290;
   liftControl.exec = true;
   swingControl.desiredPos = 0;
   swingControl.exec = true;
-  while(encoderGet(swingEnc) >= swingControl.desiredPos + 10) {}
-  delay(250);
+  while(encoderGet(swingEnc) >= swingControl.desiredPos + 25) {}
+  delay(350);
   motorSet(8, 127);
-  delay(300);
+  delay(200);
   motorSet(8,0);
   fprintf(uart1, "%s %d", liftControl.exec ? "True":"False", liftControl.encDesiredPos);
   taskDelete(NULL);
