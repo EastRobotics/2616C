@@ -26,8 +26,41 @@
  * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
-void autonomous() {
 int motorPorts[4] = {3, 4, 7, 9};
+
+
+GyroMove gyroVals;
+void initGyroVals(void *ignore) {
+    gyroVals.speed = 63;
+    gyroVals.desiredTheta = 0;
+    while(true) {
+        gyroVals.currentTheta = gyroGet(gyROH);
+        gyroVals.error = gyroVals.desiredTheta - gyroVals.currentTheta;
+    }
+}
+
+void setLiftMotors(int speed) {
+    motorSet(5, speed);
+    motorSet(6, speed);
+}
+
+void rotateDeg(int degrees) {
+    gyroVals.desiredTheta += degrees;
+    while(error > threshold) {};
+}
+void drive(int duration, int speed) {
+    motorSet(3, speed);
+    motorSet(4, speed);
+    motorSet(7, -speed);
+    motorSet(9, -speed);
+    delay(duration);
+    for (int i = 0; i < 4; i++) {
+      motorSet(motorPorts[i], 0);
+    }
+}
+void mogoControl();
+void autonomous() {
+
 motorSet(2, 127);
 while(encoderGet(mogoEnc) < 60) {};
 motorSet(2, 0);
@@ -44,4 +77,5 @@ delay(200);
     motorSet(2, -127);
     while(encoderGet(mogoEnc) > 0) {};
     motorSet(2, 0);
+    
 }
