@@ -141,6 +141,15 @@ void initialize();
 
    char message[25];
  } SwingData;
+ 
+ typedef struct {
+    int speed;
+    int currentTheta;
+    int desiredTheta;
+    int error; // error = desired - processVariable
+    int maxError;
+} GyroMove;
+ 
  LiftData liftControl;
  SwingData swingControl;
  bool bluetoothout;
