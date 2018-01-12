@@ -27,7 +27,13 @@
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
 int motorPorts[4] = {3, 4, 7, 9};
-
+typedef struct {
+    int speed;
+    int desiredAngle;
+    int currentAngle;
+    int error;
+    int allowedError;
+} MogoMove;
 
 GyroMove gyroVals;
 void initGyroVals(void *ignore) {
@@ -36,6 +42,7 @@ void initGyroVals(void *ignore) {
     while(true) {
         gyroVals.currentTheta = gyroGet(gyROH);
         gyroVals.error = gyroVals.desiredTheta - gyroVals.currentTheta;
+        gyroVals.speed = gyroVals.speed * -(abs(error + 1)/(error + 1));
     }
 }
 
@@ -46,8 +53,16 @@ void setLiftMotors(int speed) {
 
 void rotateDeg(int degrees) {
     gyroVals.desiredTheta += degrees;
+     for (int i = 0; i < 4; i++) {
+      motorSet(motorPorts[i], gyroVals.speed);
+    }
     while(error > threshold) {};
+     for (int i = 0; i < 4; i++) {
+      motorSet(motorPorts[i], 0);
+    }
+    
 }
+
 void drive(int duration, int speed) {
     motorSet(3, speed);
     motorSet(4, speed);
@@ -58,24 +73,24 @@ void drive(int duration, int speed) {
       motorSet(motorPorts[i], 0);
     }
 }
-void mogoControl();
-void autonomous() {
 
-motorSet(2, 127);
-while(encoderGet(mogoEnc) < 60) {};
-motorSet(2, 0);
-delay(200);
-    motorSet(3, 127);
-    motorSet(4, 127);
-    motorSet(7, -127);
-    motorSet(9, -127);
-    delay(1500);
-    for (int i = 0; i < 4; i++) {
-      motorSet(motorPorts[i], 0);
-    }
-
+void mogoOpen() {
+    motorSet(2, 127);
+    while(encoderGet(mogoEnc) < 60) {};
+    motorSet(2, 0);
+}
+void mogoClose() {
     motorSet(2, -127);
     while(encoderGet(mogoEnc) > 0) {};
     motorSet(2, 0);
+}
+void autonomous() {
     
+    mogoOpen();
+    
+    drive(1500, 127);
+
+    mogoClose();
+    
+    rotateDeg(-150);
 }
