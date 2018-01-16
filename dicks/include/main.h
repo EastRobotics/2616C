@@ -141,20 +141,23 @@ void initialize();
 
    char message[25];
  } SwingData;
- 
+
  typedef struct {
     int speed;
     int currentTheta;
     int desiredTheta;
     int error; // error = desired - processVariable
     int maxError;
+    int threshold;
 } GyroMove;
- 
+void initGyroVals(void*);
+
  LiftData liftControl;
  SwingData swingControl;
  bool bluetoothout;
  void initLiftData(void);
  void initSwingData();
+void stopLiftMotors(void);
 void lift(void*);
 void swing(void*);
 void autoGrab(void*);

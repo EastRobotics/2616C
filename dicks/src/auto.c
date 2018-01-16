@@ -42,13 +42,8 @@ void initGyroVals(void *ignore) {
     while(true) {
         gyroVals.currentTheta = gyroGet(gyROH);
         gyroVals.error = gyroVals.desiredTheta - gyroVals.currentTheta;
-        gyroVals.speed = gyroVals.speed * -(abs(error + 1)/(error + 1));
+        gyroVals.speed = gyroVals.speed * (abs(gyroVals.error + 1)/(gyroVals.error + 1));
     }
-}
-
-void setLiftMotors(int speed) {
-    motorSet(5, speed);
-    motorSet(6, speed);
 }
 
 void rotateDeg(int degrees) {
@@ -56,11 +51,11 @@ void rotateDeg(int degrees) {
      for (int i = 0; i < 4; i++) {
       motorSet(motorPorts[i], gyroVals.speed);
     }
-    while(error > threshold) {};
+    while(gyroVals.error > gyroVals.threshold) {};
      for (int i = 0; i < 4; i++) {
       motorSet(motorPorts[i], 0);
     }
-    
+
 }
 
 void drive(int duration, int speed) {
@@ -83,14 +78,32 @@ void mogoClose() {
     motorSet(2, -127);
     while(encoderGet(mogoEnc) > 0) {};
     motorSet(2, 0);
+    motorSet(8, 127);
+    delay(200);
+    motorSet(8,0);
 }
 void autonomous() {
-    
+  for (int m = 0; m < liftPortCount; m++) {
+    motorSet(liftControl.mtrPort[m], -127);
+  }
+    while(encoderGet(liftEnc) < 500) {};
+    stopLiftMotors();
     mogoOpen();
-    
+
     drive(1500, 127);
 
     mogoClose();
-    
-    rotateDeg(-150);
+    for (int i = 0; i < 4; i++) {
+      motorSet(motorPorts[i], 127);
+    }
+    while(gyroGet(gyROH) > -135) {};
+    for (int i = 0; i < 4; i++) {
+      motorSet(motorPorts[i], 0);
+    }
+    drive(1500, 127);
+
+    mogoOpen();
+    drive(500, 127);
+    drive(500, -127);
+
 }

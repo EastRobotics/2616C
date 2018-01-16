@@ -46,6 +46,8 @@ void initialize() {
   swingEnc = encoderInit(5, 6, false);
   dexterUS = ultrasonicInit(11, 12);
   liftUS = ultrasonicInit(7,8);
+  taskCreate(initGyroVals, TASK_DEFAULT_STACK_SIZE, NULL,
+           TASK_PRIORITY_DEFAULT);
   speakerInit();
   gyROH = gyroInit(1, 196);
   initLiftData();
