@@ -41,15 +41,13 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
-  mogoEnc = encoderInit(1, 2, false);
-  liftEnc = encoderInit (3, 4, false);
-  swingEnc = encoderInit(5, 6, false);
-  dexterUS = ultrasonicInit(11, 12);
-  liftUS = ultrasonicInit(7,8);
+  leftDrive = encoderInit(11,12, true);
+  rightDrive = encoderInit(7,8, false);
+  liftUS = ultrasonicInit(9,10);
   taskCreate(initGyroVals, TASK_DEFAULT_STACK_SIZE, NULL,
            TASK_PRIORITY_DEFAULT);
   speakerInit();
-  gyROH = gyroInit(1, 196);
+  gyROH = gyroInit(6, 196);
   initLiftData();
   initSwingData();
 }

@@ -3,7 +3,7 @@
 
 
 void initLiftData(void) {
-  liftControl.mtrPort[0] = 5;
+  liftControl.mtrPort[0] = 2;
   liftControl.mtrPort[1] = 6;
   liftControl.speed = 127;
   liftControl.encLimit = 720;
@@ -13,7 +13,7 @@ void initLiftData(void) {
   liftControl.autostack = false;
 }
 void initSwingData(){
-  swingControl.mtrPort = 1;
+  swingControl.mtrPort = 3;
   swingControl.speed = -53;
   swingControl.encLimit = 240;
   swingControl.liftSwingOutEncMin = 220;

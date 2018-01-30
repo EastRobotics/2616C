@@ -42,10 +42,10 @@
 
 #define MASTER_CH1 joystickGetAnalog(1, 1)
 #define rotate threshold(MASTER_CH1)
-#define liftVal -threshold(joystickGetAnalog(2,3))
+#define liftVal threshold(joystickGetAnalog(2,3))
 
 #define claw joystickGetDigital(2, 6, JOY_UP)?127:(joystickGetDigital(2, 6, JOY_DOWN)?-127:0)
-#define swingVal -threshold(joystickGetAnalog(2,1))
+#define swingVal (-threshold(joystickGetAnalog(2,2)))
 #define grabbyMcGrabberson joystickGetDigital(1, 7, JOY_DOWN)?127:(joystickGetDigital(1, 7, JOY_RIGHT)?-127:0)
 
 #define grabButton joystickGetDigital(2, 7, JOY_UP)
@@ -191,31 +191,26 @@ void operatorControl() {
 	bool lastButton6D = false;
 	bool lastButton6U = false;
   bool liftControlBtnPushed = false;
-  bool autolift = true;
+  bool autolift = false;
   taskRunLoop(displaysensordata, 2000);
 	while (1) {
+    printf("%d\n", analogRead(7));
+//
   //  printf("%d %d\r\n", taskGetState ( btask ),taskGetState ( dtask ));
-  if (!autolift) {
-    motorSet(1, swingVal);
-  }
-
-		motorSet(2, mogoVal_actual);
-		motorSet(3, (drive + rotate)/downshift);
-		motorSet(4, (drive + rotate)/downshift);
+    motorSet(1, claw);
     if (!autolift) {
-      motorSet(5, liftVal);
+      motorSet(2, liftVal);
   		motorSet(6, liftVal);
     }
-		motorSet(7, (-drive + rotate)/downshift);
-		if (!autolift) {
-      motorSet(8, claw);
-    }
+    motorSet(3, swingVal);
+    motorSet(7, (-drive + rotate)/downshift);
+		motorSet(4, (drive + rotate)/downshift);
+		motorSet(8, (drive + rotate)/downshift);
 		motorSet(9, (-drive + rotate)/downshift);
-		motorSet(10, grabbyMcGrabberson);
+    !(analogRead(7) > 1234) || joystickGetDigital(1, 5, JOY_DOWN)?motorSet(10, mogoVal_actual):motorSet(10, abs(mogoVal_actual)/4);
     if (grabButton) {
       autoGrabTH = taskCreate(autoGrab, TASK_DEFAULT_STACK_SIZE, NULL,
                TASK_PRIORITY_DEFAULT);
-
     }
       if (liftControlBtnPushed & joystickGetDigital('2','8',JOY_RIGHT)) {
 

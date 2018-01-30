@@ -26,7 +26,8 @@
  * The autonomous task may exit, unlike operatorControl() which should never exit. If it does
  * so, the robot will await a switch to another mode or disable/enable cycle.
  */
-int motorPorts[4] = {3, 4, 7, 9};
+#define WHEEL_RADIUS 2
+int motorPorts[4] = {4, 8, 7, 9};
 typedef struct {
     int speed;
     int desiredAngle;
@@ -59,8 +60,8 @@ void rotateDeg(int degrees) {
 }
 
 void drive(int duration, int speed) {
-    motorSet(3, speed);
     motorSet(4, speed);
+    motorSet(8, speed);
     motorSet(7, -speed);
     motorSet(9, -speed);
     delay(duration);
@@ -68,25 +69,28 @@ void drive(int duration, int speed) {
       motorSet(motorPorts[i], 0);
     }
 }
-
+void driveDistance(int distance, int speed) {
+  motorSet(4, speed);
+  motorSet(8, speed);
+  motorSet(7, -speed);
+  motorSet(9, -speed);
+  while(((encoderGet(leftDrive) + encoderGet(rightDrive))/2) * WHEEL_RADIUS * 2 < distance) {};
+}
 void mogoOpen() {
-    motorSet(2, 127);
-    while(encoderGet(mogoEnc) < 60) {};
-    motorSet(2, 0);
+    motorSet(10, 127);
+    while(analogRead(7) > 10) {};
+    motorSet(10, 0);
 }
 void mogoClose() {
-    motorSet(2, -127);
-    while(encoderGet(mogoEnc) > 0) {};
-    motorSet(2, 0);
-    motorSet(8, 127);
-    delay(200);
-    motorSet(8,0);
+    motorSet(10, -127);
+    while(analogRead(7) < 1200) {};
+    motorSet(10, 0);
 }
 void autonomous() {
   for (int m = 0; m < liftPortCount; m++) {
-    motorSet(liftControl.mtrPort[m], -127);
+    motorSet(liftControl.mtrPort[m], 127);
   }
-    while(encoderGet(liftEnc) < 500) {};
+    delay(300);
     stopLiftMotors();
     mogoOpen();
 
@@ -96,11 +100,11 @@ void autonomous() {
     for (int i = 0; i < 4; i++) {
       motorSet(motorPorts[i], 127);
     }
-    while(gyroGet(gyROH) > -135) {};
+    while(gyroGet(gyROH) > -120) {};
     for (int i = 0; i < 4; i++) {
-      motorSet(motorPorts[i], 0);
+      motorSet(motorPorts[i], 0 );
     }
-    drive(1500, 127);
+    drive(2000, 127);
 
     mogoOpen();
     drive(500, 127);

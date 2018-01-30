@@ -168,6 +168,8 @@ void bprint(char, const char *);
 void blisten(char, void(*)(char*));
 void bluelisten(char *);
 #define LINE_TRACKER_PORT 1
+Encoder leftDrive;
+Encoder rightDrive;
 Gyro gyROH;
 Ultrasonic dexterUS;
 Ultrasonic liftUS;
