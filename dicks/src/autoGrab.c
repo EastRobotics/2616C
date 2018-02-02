@@ -6,7 +6,7 @@ void initLiftData(void) {
   liftControl.mtrPort[0] = 2;
   liftControl.mtrPort[1] = 6;
   liftControl.speed = 127;
-  liftControl.encLimit = 720;
+  liftControl.encLimit = 80;
   liftControl.timeout = 5000;
   liftControl.exec = false;
   liftControl.coneDetectThreshold = 22;
@@ -64,7 +64,7 @@ void lift(void *ignore) { // Lift task function
           }
         }
       }
-      liftControl.encActualPos = encoderGet(liftEnc);
+       imeGet(0, &liftControl.encActualPos);
     }
       fprintf(uart1, "Message: %s\n", liftControl.message);
 
@@ -109,7 +109,7 @@ void autoGrab(void *ignore) {
   delay(350);
   motorSet(8, 127);
   delay(200);
-  motorSet(8,0);
+  motorSet(8, 0);
   fprintf(uart1, "%s %d", liftControl.exec ? "True":"False", liftControl.encDesiredPos);
   taskDelete(NULL);
 }
