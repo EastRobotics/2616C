@@ -110,8 +110,9 @@ void openClaw() {
 }
 void autoGrab(void *ignore) {
   liftControl.encDesiredPos = 290;
+  
   liftControl.exec = true;
-  swingControl.desiredPos = 0;
+  
   swingControl.exec = true;
   while(encoderGet(swingEnc) >= swingControl.desiredPos + 25) {}
   delay(350);
