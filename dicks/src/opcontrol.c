@@ -58,22 +58,24 @@ char *bluetoothRead(char uart);
 TaskHandle swTH;
 TaskHandle tomTH;
 TaskHandle jprdyTH;
-TaskHandle liftTH, swingTH, autoGrabTH;
+//TaskHandle liftTH, swingTH, autoGrabTH;
 
 void displaysensordata() {
 
   // int le;
   // int us;
   unsigned int bt;
-if (bluetoothout){
+if (bluetoothout) {
 //  bprintf(uart1, "%c[2J", 27);  //Clear Screen
 //  bprintf(uart1, "%c[H", 27);   // Top left corner
+//
+
   fprintf(uart1, " \r\n \r\n \r\n");   // Top left corner
   fprintf(uart1, "Gyroscope: %d\n", gyroGet(gyROH));
   fprintf(uart1, "Odom Ultrasonic: %d\n", ultrasonicGet(dexterUS));
-  fprintf(uart1, "Mobile Goal Encoder: %d\n\n", encoderGet(mogoEnc));
+  fprintf(uart1, "Mobile Goal Encoder: %d\n\n", analogRead(7));
   fprintf(uart1, "Lift Encoder: %d\n", encoderGet(liftEnc));
-  fprintf(uart1, "Swing Encoder: %d\n", encoderGet(swingEnc));
+  fprintf(uart1, "Swing Encoder: %d\n", analogRead(5));
   fprintf(uart1, "Lift Ultrasonic: %d\n", ultrasonicGet(liftUS));
   bt = powerLevelMain();
   fprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
@@ -101,6 +103,7 @@ void blueListen(char * message) {
     if (strcmp(message, "reset\r\n") == 0) {
         analogCalibrate(LINE_TRACKER_PORT);
         encoderReset(liftEnc);
+        imeReset(0);
         encoderReset(swingEnc);
         encoderReset(mogoEnc);
       //gyroReset(gyro);
@@ -174,10 +177,6 @@ void blueListen(char * message) {
     delay(200);
 }
 
-
-
-
-
 void operatorControl() {
 //TaskHandle dtask;
   liftTH = taskCreate(lift, TASK_DEFAULT_STACK_SIZE, NULL,
@@ -190,29 +189,34 @@ void operatorControl() {
 	int downshift = 1;
 	bool lastButton6D = false;
 	bool lastButton6U = false;
-  bool liftControlBtnPushed = false;
   bool autolift = false;
   taskRunLoop(displaysensordata, 2000);
 	while (1) {
-    printf("%d\n", analogRead(7));
-//
-  //  printf("%d %d\r\n", taskGetState ( btask ),taskGetState ( dtask ));
+   printf("%d | %d | %d\n", analogRead(7), ultrasonicGet(liftUS), encoderGet(liftEnc));
     motorSet(1, claw);
     if (!autolift) {
       motorSet(2, liftVal);
+      motorSet(3, swingVal);
   		motorSet(6, liftVal);
     }
-    motorSet(3, swingVal);
-    motorSet(7, (-drive + rotate)/downshift);
+
 		motorSet(4, (drive + rotate)/downshift);
+    motorSet(7, (-drive + rotate)/downshift);
 		motorSet(8, (drive + rotate)/downshift);
 		motorSet(9, (-drive + rotate)/downshift);
     !(analogRead(7) > 1234) || joystickGetDigital(1, 5, JOY_DOWN)?motorSet(10, mogoVal_actual):motorSet(10, abs(mogoVal_actual)/4);
     if (grabButton) {
-      autoGrabTH = taskCreate(autoGrab, TASK_DEFAULT_STACK_SIZE, NULL,
+       if(autoGrabTH != NULL) {
+          if (taskGetState(autoGrabTH) == TASK_SUSPENDED) {
+            taskResume(autoGrabTH);
+          }
+        } else {
+            autoGrabTH = taskCreate(autoGrab, TASK_DEFAULT_STACK_SIZE, NULL,
                TASK_PRIORITY_DEFAULT);
-    }
-      if (liftControlBtnPushed & joystickGetDigital('2','8',JOY_RIGHT)) {
+
+        }
+      }
+      if (joystickGetDigital('2','8',JOY_RIGHT)) {
 
         //TODO make a method for this
         if (liftTH != NULL) {
@@ -227,10 +231,9 @@ void operatorControl() {
             taskSuspend(liftTH);
             taskSuspend(swingTH);
           }
+          while(joystickGetDigital('2','8',JOY_RIGHT)) {};
         }
-
       }
-    liftControlBtnPushed = joystickGetDigital('2','8',JOY_RIGHT);
 		if(joystickGetDigital(1, 6, JOY_DOWN)) {
 			if(lastButton6D & joystickGetDigital(1, 6, JOY_DOWN)) {
 				downshift = 2;
@@ -240,7 +243,7 @@ void operatorControl() {
 		if(joystickGetDigital(1, 6, JOY_UP)) {
 			if(lastButton6U & joystickGetDigital(1, 6, JOY_UP)) {
 				downshift = 1;
-			}
+		}
 			lastButton6U = joystickGetDigital(1, 6, JOY_UP);
 		}
     delay(20);

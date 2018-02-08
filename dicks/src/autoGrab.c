@@ -1,7 +1,6 @@
 #include "main.h"
 #include "string.h"
 
-
 void initLiftData(void) {
   liftControl.mtrPort[0] = 2;
   liftControl.mtrPort[1] = 6;
@@ -9,63 +8,53 @@ void initLiftData(void) {
   liftControl.encLimit = 80;
   liftControl.timeout = 5000;
   liftControl.exec = false;
-  liftControl.coneDetectThreshold = 22;
+  liftControl.coneDetectThreshold = 15;
   liftControl.autostack = false;
 }
-void initSwingData(){
+void initSwingData() {
   swingControl.mtrPort = 3;
-  swingControl.speed = -53;
-  swingControl.encLimit = 240;
-  swingControl.liftSwingOutEncMin = 220;
+  swingControl.speed = -127;
+  swingControl.encLimit = 40;
 }
-void setLiftMotors(void ){
+void setLiftMotors(void) {
   for (int m = 0; m < liftPortCount; m++) {
-    motorSet(liftControl.mtrPort[m], -liftControl.speed);
+    motorSet(liftControl.mtrPort[m], liftControl.speed);
   }
 }
 
-void stopLiftMotors(void ){
+void stopLiftMotors(void) {
   for (int m = 0; m < liftPortCount; m++) {
     motorSet(liftControl.mtrPort[m], 0);
   }
 }
 void lift(void *ignore) { // Lift task function
   while (1) {
+    liftControl.encActualPos = encoderGet(liftEnc);
     if (liftControl.exec) {
-      if (liftControl.autostack) {
-        if (liftControl.coneDetectThreshold > ultrasonicGet(liftUS) &&
-            encoderGet(liftEnc) >= liftControl.encLimit) {
-          setLiftMotors();
-
-        } else {
-          stopLiftMotors();
-        }
-        strncpy(liftControl.message, "Auto Stack", 10);
-      } else {
         if (motorGet(liftControl.mtrPort[0]) == 0) {
-          //  for (int m = 0; m < liftPortCount; m++) {
-          //    motorSet(liftControl.mtrPort[m], -liftControl.speed);
           setLiftMotors();
-          //    fprintf(uart1,"Set %d\n\r", m);
-          //  }
         }
-        if (encoderGet(liftEnc) >= liftControl.encLimit) {
+        if (liftControl.encActualPos >= liftControl.encLimit) {
           for (int m = 0; m < liftPortCount; m++) {
             motorSet(liftControl.mtrPort[m], 0);
             liftControl.exec = false;
             strncpy(liftControl.message, "Hit Encoder Limit", 17);
           }
         }
-        if ((encoderGet(liftEnc)) >= liftControl.encDesiredPos) {
+        if (liftControl.encActualPos >= liftControl.encDesiredPos) {
           for (int m = 0; m < liftPortCount; m++) {
             motorSet(liftControl.mtrPort[m], 0);
             liftControl.exec = false;
             strncpy(liftControl.message, "Hit Desired", 11);
           }
         }
-      }
-       imeGet(0, &liftControl.encActualPos);
-    }
+         if(swingControl.actualPos >= swingControl.encLimit) {
+           stopLiftMotors();
+           liftControl.exec = false;
+          liftControl.encDesiredPos = 0;
+        }
+}
+       liftControl.encActualPos = encoderGet(liftEnc);
       fprintf(uart1, "Message: %s\n", liftControl.message);
 
       delay(200);
@@ -76,45 +65,60 @@ void lift(void *ignore) { // Lift task function
 void swing(void* ignore) {
   while (1) {
     if (swingControl.exec) {
-      while (encoderGet(liftEnc) <= swingControl.liftSwingOutEncMin) {
-      }
       if (motorGet(swingControl.mtrPort) == 0) {
-          motorSet(swingControl.mtrPort, -swingControl.speed);
+          motorSet(swingControl.mtrPort, swingControl.speed);
       }
-      if (encoderGet(swingEnc) >= swingControl.encLimit) {
-          motorSet(swingControl.mtrPort, 0);
-          swingControl.exec = false;
-          strncpy(swingControl.message, "Hit Encoder Limit", 17);
-      }
-      if ((encoderGet(swingEnc)) <= swingControl.desiredPos) {
-          motorSet(swingControl.mtrPort, 0);
-          swingControl.exec = false;
-          strncpy(swingControl.message, "Hit Desired", 11);
+      if (swingControl.actualPos >= liftControl.coneDetectThreshold) {
+        motorSet(swingControl.mtrPort, -20);
+        liftControl.encDesiredPos = 45;
+        liftControl.exec = true;
       }
     }
-      swingControl.actualPos = encoderGet(swingEnc);
-
+      swingControl.actualPos = ultrasonicGet(liftUS);
+    //  printf("IN swing control\n");
       delay(50);
   }
 }
-void autoGrab(void *ignore) {
-  motorSet(8, -127);
-  while(digitalRead(CLAW_LIMIT) == HIGH){}
-  motorSet(8,0);
-  liftControl.encDesiredPos = 290;
-  liftControl.exec = true;
-  swingControl.desiredPos = 0;
-  swingControl.exec = true;
-  while(encoderGet(swingEnc) >= swingControl.desiredPos + 25) {}
-  delay(350);
-  motorSet(8, 127);
+void closeClaw() {
+  motorSet(1, -127);
   delay(200);
-  motorSet(8, 0);
-  fprintf(uart1, "%s %d", liftControl.exec ? "True":"False", liftControl.encDesiredPos);
-  taskDelete(NULL);
+  motorSet(1,0);
 }
 
-void lifttostack(){
+void openClaw() {
+  motorSet(1, 127);
+  delay(200);
+  motorSet(1,0);
+}
+void autoGrab(void *ignore) {
+  while(1) {
+    if (taskGetState(swingTH) == TASK_SUSPENDED) {
+      taskResume(swingTH);
+    }
 
 
+    if (taskGetState(liftTH) == TASK_SUSPENDED) {
+      taskResume(liftTH);
+    }
+  swingControl.exec = true;
+  liftControl.exec = true;
+//  liftControl.encDesiredPos = 45;
+  while (liftControl.coneDetectThreshold > swingControl.actualPos) {
+    printf("%d %d  - Not at limit!\n",liftControl.coneDetectThreshold , swingControl.actualPos);
+  }
+  printf("Finish Swing\n");
+  taskSuspend(swingTH);
+  taskSuspend(liftTH);
+  motorSet(swingControl.mtrPort, -90);
+  delay(500);
+  motorSet(swingControl.mtrPort, 0);
+  printf("Open Claw\n");
+  openClaw();
+  delay(350);
+
+  fprintf(uart1, "%s %d", liftControl.exec ? "True":"False", liftControl.encDesiredPos);
+  taskSuspend(NULL);
+}
+}
+void lifttostack() {
 }

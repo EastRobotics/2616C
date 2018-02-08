@@ -162,6 +162,7 @@ void lift(void*);
 void swing(void*);
 void autoGrab(void*);
 void operatorControl();
+TaskHandle liftTH, swingTH, autoGrabTH;
 
 #define bprintf(uart,format, args...) fprintf(uart, format, args)
 void bprint(char, const char *);

@@ -61,8 +61,8 @@ void rotateDeg(int degrees) {
 
 void drive(int duration, int speed) {
     motorSet(4, speed);
-    motorSet(8, speed);
     motorSet(7, -speed);
+    motorSet(8, speed);
     motorSet(9, -speed);
     delay(duration);
     for (int i = 0; i < 4; i++) {
@@ -76,17 +76,22 @@ void driveDistance(int distance, int speed) {
   motorSet(9, -speed);
   while(((encoderGet(leftDrive) + encoderGet(rightDrive))/2) * WHEEL_RADIUS * 2 < distance) {};
 }
+
 void mogoOpen() {
     motorSet(10, 127);
     while(analogRead(7) > 10) {};
     motorSet(10, 0);
 }
+
 void mogoClose() {
     motorSet(10, -127);
     while(analogRead(7) < 1200) {};
     motorSet(10, 0);
 }
+
 void autonomous() {
+  taskCreate(initGyroVals, TASK_DEFAULT_STACK_SIZE, NULL,
+           TASK_PRIORITY_DEFAULT);
   for (int m = 0; m < liftPortCount; m++) {
     motorSet(liftControl.mtrPort[m], 127);
   }
@@ -97,17 +102,14 @@ void autonomous() {
     drive(1500, 127);
 
     mogoClose();
-    for (int i = 0; i < 4; i++) {
-      motorSet(motorPorts[i], 127);
-    }
-    while(gyroGet(gyROH) > -120) {};
-    for (int i = 0; i < 4; i++) {
-      motorSet(motorPorts[i], 0 );
-    }
+
+    rotateDeg(120);
+
     drive(2000, 127);
 
     mogoOpen();
+
     drive(500, 127);
-    drive(500, -127);
+    drive(1000, -127);
 
 }

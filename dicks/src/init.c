@@ -41,9 +41,11 @@ void initializeIO() {
  * can be implemented in this task if desired.
  */
 void initialize() {
+//  imeInitializeAll();
   leftDrive = encoderInit(11,12, true);
   rightDrive = encoderInit(7,8, false);
-  liftUS = ultrasonicInit(9,10);
+  liftEnc = encoderInit(5,6, false);
+  liftUS = ultrasonicInit(1,2);
   taskCreate(initGyroVals, TASK_DEFAULT_STACK_SIZE, NULL,
            TASK_PRIORITY_DEFAULT);
   speakerInit();
