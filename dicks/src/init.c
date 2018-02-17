@@ -46,10 +46,10 @@ void initialize() {
   rightDrive = encoderInit(7,8, false);
   liftEnc = encoderInit(5,6, false);
   liftUS = ultrasonicInit(1,2);
+  gyROH = gyroInit(6, 196);
   taskCreate(initGyroVals, TASK_DEFAULT_STACK_SIZE, NULL,
            TASK_PRIORITY_DEFAULT);
   speakerInit();
-  gyROH = gyroInit(6, 196);
   initLiftData();
   initSwingData();
 }

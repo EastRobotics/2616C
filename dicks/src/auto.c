@@ -40,6 +40,7 @@ GyroMove gyroVals;
 void initGyroVals(void *ignore) {
     gyroVals.speed = 63;
     gyroVals.desiredTheta = 0;
+    gyroVals.threshold = 3;
     while(true) {
         gyroVals.currentTheta = gyroGet(gyROH);
         gyroVals.error = gyroVals.desiredTheta - gyroVals.currentTheta;
@@ -50,13 +51,12 @@ void initGyroVals(void *ignore) {
 void rotateDeg(int degrees) {
     gyroVals.desiredTheta += degrees;
      for (int i = 0; i < 4; i++) {
-      motorSet(motorPorts[i], gyroVals.speed);
+      motorSet(motorPorts[i], -gyroVals.speed);
     }
-    while(gyroVals.error > gyroVals.threshold) {};
+    while(abs(gyroVals.error) > gyroVals.threshold) {};
      for (int i = 0; i < 4; i++) {
       motorSet(motorPorts[i], 0);
     }
-
 }
 
 void drive(int duration, int speed) {
@@ -79,7 +79,7 @@ void driveDistance(int distance, int speed) {
 
 void mogoOpen() {
     motorSet(10, 127);
-    while(analogRead(7) > 10) {};
+    delay(1750);
     motorSet(10, 0);
 }
 
@@ -90,8 +90,11 @@ void mogoClose() {
 }
 
 void autonomous() {
+
+  /*
   taskCreate(initGyroVals, TASK_DEFAULT_STACK_SIZE, NULL,
            TASK_PRIORITY_DEFAULT);
+           */
   for (int m = 0; m < liftPortCount; m++) {
     motorSet(liftControl.mtrPort[m], 127);
   }
@@ -102,7 +105,8 @@ void autonomous() {
     drive(1500, 127);
 
     mogoClose();
-
+    openClaw();
+/*
     rotateDeg(120);
 
     drive(2000, 127);
@@ -111,5 +115,5 @@ void autonomous() {
 
     drive(500, 127);
     drive(1000, -127);
-
+*/
 }

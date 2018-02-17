@@ -115,6 +115,8 @@ void initialize();
  */
 #define CLAW_LIMIT 9
  #define liftPortCount 2
+ void openClaw();
+ void closeClaw();
  typedef struct {
    unsigned char mtrPort[liftPortCount];
    int speed;
@@ -128,6 +130,7 @@ void initialize();
    char message[25];
    int coneDetectThreshold;
    bool autostack;
+   int error;
  } LiftData;
  typedef struct {
    unsigned char mtrPort;

@@ -206,6 +206,20 @@ void operatorControl() {
 		motorSet(9, (-drive + rotate)/downshift);
     !(analogRead(7) > 1234) || joystickGetDigital(1, 5, JOY_DOWN)?motorSet(10, mogoVal_actual):motorSet(10, abs(mogoVal_actual)/4);
     if (grabButton) {
+      if (liftTH != NULL) {
+        if (taskGetState(liftTH) == TASK_SUSPENDED) {
+          autolift = true;
+          taskResume(liftTH);
+          taskResume(swingTH);
+        } else {
+          autolift = false;
+          liftControl.exec = false;
+          swingControl.exec = false;
+          taskSuspend(liftTH);
+          taskSuspend(swingTH);
+        }
+
+      }
        if(autoGrabTH != NULL) {
           if (taskGetState(autoGrabTH) == TASK_SUSPENDED) {
             taskResume(autoGrabTH);
@@ -215,24 +229,7 @@ void operatorControl() {
                TASK_PRIORITY_DEFAULT);
 
         }
-      }
-      if (joystickGetDigital('2','8',JOY_RIGHT)) {
-
-        //TODO make a method for this
-        if (liftTH != NULL) {
-          if (taskGetState(liftTH) == TASK_SUSPENDED) {
-            autolift = true;
-            taskResume(liftTH);
-            taskResume(swingTH);
-          } else {
-            autolift = false;
-            liftControl.exec = false;
-            swingControl.exec = false;
-            taskSuspend(liftTH);
-            taskSuspend(swingTH);
-          }
-          while(joystickGetDigital('2','8',JOY_RIGHT)) {};
-        }
+        while(joystickGetDigital('2','8',JOY_RIGHT)) {};
       }
 		if(joystickGetDigital(1, 6, JOY_DOWN)) {
 			if(lastButton6D & joystickGetDigital(1, 6, JOY_DOWN)) {

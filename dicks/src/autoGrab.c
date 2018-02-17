@@ -5,6 +5,7 @@ void initLiftData(void) {
   liftControl.mtrPort[0] = 2;
   liftControl.mtrPort[1] = 6;
   liftControl.speed = 127;
+
   liftControl.encLimit = 80;
   liftControl.timeout = 5000;
   liftControl.exec = false;
@@ -18,6 +19,8 @@ void initSwingData() {
 }
 void setLiftMotors(void) {
   for (int m = 0; m < liftPortCount; m++) {
+    liftControl.speed = liftControl.speed * (abs(liftControl.error  + 1)/(liftControl.error + 1));
+    liftControl.error = liftControl.encDesiredPos - liftControl.encActualPos;
     motorSet(liftControl.mtrPort[m], liftControl.speed);
   }
 }
@@ -52,12 +55,13 @@ void lift(void *ignore) { // Lift task function
            stopLiftMotors();
            liftControl.exec = false;
           liftControl.encDesiredPos = 0;
-        }
+          }
 }
        liftControl.encActualPos = encoderGet(liftEnc);
+       liftControl.error = liftControl.encDesiredPos - liftControl.encActualPos;
       fprintf(uart1, "Message: %s\n", liftControl.message);
 
-      delay(200);
+      delay(20);
 
   }
 }
@@ -90,25 +94,23 @@ void openClaw() {
   delay(200);
   motorSet(1,0);
 }
+
 void autoGrab(void *ignore) {
   while(1) {
     if (taskGetState(swingTH) == TASK_SUSPENDED) {
       taskResume(swingTH);
     }
 
-
     if (taskGetState(liftTH) == TASK_SUSPENDED) {
       taskResume(liftTH);
     }
   swingControl.exec = true;
   liftControl.exec = true;
-//  liftControl.encDesiredPos = 45;
   while (liftControl.coneDetectThreshold > swingControl.actualPos) {
     printf("%d %d  - Not at limit!\n",liftControl.coneDetectThreshold , swingControl.actualPos);
   }
   printf("Finish Swing\n");
   taskSuspend(swingTH);
-  taskSuspend(liftTH);
   motorSet(swingControl.mtrPort, -90);
   delay(500);
   motorSet(swingControl.mtrPort, 0);
@@ -116,9 +118,11 @@ void autoGrab(void *ignore) {
   openClaw();
   delay(350);
 
+
   fprintf(uart1, "%s %d", liftControl.exec ? "True":"False", liftControl.encDesiredPos);
   taskSuspend(NULL);
 }
 }
 void lifttostack() {
+  
 }
