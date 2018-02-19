@@ -45,8 +45,9 @@ void initialize() {
   leftDrive = encoderInit(11,12, true);
   rightDrive = encoderInit(7,8, false);
   liftEnc = encoderInit(5,6, false);
-  liftUS = ultrasonicInit(1,2);
+  intakeUS = ultrasonicInit(1,2);
   gyROH = gyroInit(6, 196);
+  swingEnc = encoderInit(3, 4, true);
   taskCreate(initGyroVals, TASK_DEFAULT_STACK_SIZE, NULL,
            TASK_PRIORITY_DEFAULT);
   speakerInit();
