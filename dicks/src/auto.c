@@ -102,12 +102,17 @@ void autonomous() {
     stopLiftMotors();
     mogoOpen();
 
-    drive(1500, 127);
-
+    drive(1500, -127);
+    rotateDeg(45);
+    drive(500, 127);
+    
     mogoClose();
+    drive(500, -127);
     openClaw();
+    rotateDeg(-45);
+    
 /*
-    rotateDeg(120);
+    rotateDeg(180);
 
     drive(2000, 127);
 
