@@ -110,7 +110,10 @@ void autonomous() {
     drive(500, -127);
     openClaw();
     rotateDeg(-45);
-    
+    drive(1500, 127);
+    rotateDeg(-45);
+    drive(1000, 127);
+    mogoOpen();
 /*
     rotateDeg(180);
 
