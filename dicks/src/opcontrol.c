@@ -20,7 +20,7 @@
 #define swingVal (-threshold(joystickGetAnalog(2,2)))
 #define grabbyMcGrabberson joystickGetDigital(1, 7, JOY_DOWN)?127:(joystickGetDigital(1, 7, JOY_RIGHT)?-127:0)
 
-Semaphore AutoStackSema;
+Semaphore AutoStackSema, downSema;
 int swingdownset;
 int liftdownset;
 //#define grabButton joystickGetDigital(2, 7, JOY_UP)
@@ -28,7 +28,7 @@ void hc05Init(char uart, bool atMode);
 
 char *bluetoothRead(char uart);
 //TaskHandle liftTH, swingTH, autoGrabTH;
-TaskHandle liftTH, swingTH, autoGrabTH;
+TaskHandle liftTH, swingTH, autoGrabTH,autodownTH;
  bool autolift;
 int gollastdir = 0;
  int goliath(){
@@ -96,7 +96,8 @@ bool taskstartButtons(){
   return (js == 1);
 }
 bool autodownButton(){
-  int js = joystickGetDigital(2, 8, JOY_DOWN);
+  int js = 0;
+ js = joystickGetDigital(2, 8, JOY_DOWN);
 //  printf("Autolift = %s\n",autolift==true?"True":"False");
   if(js == 1)
   {
@@ -125,7 +126,7 @@ if (bluetoothout) {
   bt = powerLevelMain();
   fprintf(uart1, "Main Battery Voltage: %0.4fV\n", ((float)bt) / 1000);
   fprintf(uart1, "Secondary Battery Voltage: %0.4fV\n", (float) analogRead(2) * 4.0 / 70);
-  fprintf(uart1, "Claw Limit Switch: %s\n", (digitalRead(CLAW_LIMIT) == LOW)?"Pressed":"Released");
+  fprintf(uart1, "Swing Limit Switch: %s\n", (digitalRead(9) == LOW)?"Pressed":"Released");
 
   fprintf(uart1, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 }
@@ -168,14 +169,13 @@ void operatorControl() {
 //TaskHandle dtask;
 //T
  AutoStackSema = semaphoreCreate();
- semaphoreTake(AutoStackSema,1000);
+ semaphoreTake(AutoStackSema,0);
+ downSema = semaphoreCreate();
+ semaphoreTake(downSema,0);
  autoGrabTH = taskCreate(autoGrab2, TASK_DEFAULT_STACK_SIZE, NULL,
     TASK_PRIORITY_DEFAULT);
+  autodownTH =  taskCreate(autodown, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
  printf("Starting ----\n");
-  liftTH = taskCreate(lift, TASK_DEFAULT_STACK_SIZE, NULL,
-           TASK_PRIORITY_DEFAULT);
-  swingTH = taskCreate(swing, TASK_DEFAULT_STACK_SIZE, NULL,
-           TASK_PRIORITY_DEFAULT);
   bluetoothout = true;
 	blisten(1, blueListen);
 	printf("crap");
@@ -189,8 +189,8 @@ void operatorControl() {
       motorSet(3, -swingVal);
       motorSet(6, liftVal);
       motorSet(1,  goliath());
+      //printf("Autolift is false\n");
     }
-
 	motorSet(4, (drive + rotate));
     	motorSet(7, (-drive + rotate));
 	motorSet(8, (drive + rotate));
@@ -201,61 +201,43 @@ void operatorControl() {
       swingdownset = encoderGet(swingEnc);
       liftdownset = encoderGet(liftEnc);
       semaphoreGive(AutoStackSema);
-      printf("OpControl - Given Returned\n");
-
-      // if (liftTH != NULL) {
-      //   if (taskGetState(liftTH) == TASK_SUSPENDED) {
-      //     autolift = true;
-      //     taskResume(liftTH);
-      //     taskResume(swingTH);
-      //   } else {
-      //     autolift = false;
-      //     liftControl.exec = false;
-      //     swingControl.exec = false;
-      //     taskSuspend(liftTH);
-      //     taskSuspend(swingTH);
-      //   }
-      //
-      // }
-  //     if(autoGrabTH != NULL) {
-        //   if (taskGetState(autoGrabTH) == TASK_SUSPENDED) {
-        //     taskResume(autoGrabTH);
-        //   }
-        // } else {
-        // printf("Task Count = %d \n",taskGetCount());
-        //
-        //  printf("Task = %s\n",taskGetState(autoGrabTH)==0?"No Task":"TaskAlive");
-        //     autoGrabTH = taskCreate(autoGrab2, TASK_DEFAULT_STACK_SIZE, NULL,
-        //        TASK_PRIORITY_DEFAULT);
-        //    printf("Autograb task created\n");
-    //    }
-      //  while(joystickGetDigital('2','8',JOY_RIGHT)) {};
+    //  autolift = false;
+    //  printf("OpControl - Given Returned\n");
       }
       if (grabkillButton()) {
-        semaphoreTake(AutoStackSema,1000);
+        semaphoreTake(AutoStackSema,0);
         autolift=false;
       }
-      delay(40);
+      delay(20);
       if(semaphoreTake(AutoStackSema,0)){
-         printf("OpControl - Semaphore Returned\n");
+         printf("OpControl - Auto Semaphore Returned\n");
          autolift=false;
        }
-       if (autodownButton()) {
+    //   printf("Test down Sema\n");
+       if(semaphoreTake(downSema,0)){
+          printf("OpControl - Down Semaphore Returned\n");
+          autolift=false;
+        }
+       if (autodownButton()  && !autolift) {
          gollastdir = 0;
          autolift=true;
-         autodown();
-         autolift=false;
+         semaphoreGive(downSema);
+         //autolift=false;
          gollastdir = 1;
        }
        if (taskkillButtons()){
          printf("AbortingStackTask");
          taskDelete(autoGrabTH);
+         taskDelete(autodownTH);
          autolift=false;
        }
        if (taskstartButtons()){
          printf("RestartingStackTask");
          autoGrabTH = taskCreate(autoGrab2, TASK_DEFAULT_STACK_SIZE, NULL,
             TASK_PRIORITY_DEFAULT);
+
+        autodownTH =  taskCreate(autodown, TASK_DEFAULT_STACK_SIZE, NULL, TASK_PRIORITY_DEFAULT);
+
             autolift=false;
        }
     delay(20);
