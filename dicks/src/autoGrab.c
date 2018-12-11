@@ -9,8 +9,6 @@ extern Semaphore AutoStackSema, downSema;
 extern int swingdownset;
 extern int liftdownset;
 
-unsigned int _timeout;
-
 void initLiftData(void) {
   liftControl.mtrPort[0] = 2;
   liftControl.mtrPort[1] = 6;
@@ -27,9 +25,6 @@ void initSwingData() {
   swingControl.speed = -127;
   swingControl.encLimit = 40;
 }
-
-
-
 // void setLiftMotors(void) {
 //
 //     motorSet(2, 127);
@@ -144,8 +139,6 @@ void openClaw() {
 //   }
 // }
 
-
-
 int getUS() {
   int us = ultrasonicGet(intakeUS);
   return (us == -1 ? 999 : us);
@@ -194,9 +187,7 @@ void autoGrab2(void *ignore) {
     motorSet(3, 90);
 
     printf(" wait for goliath u to reach 280\n");
-
-    _timeout = millis() + 1000;
-    while (encoderGet(swingEnc) > (swingE -300) && millis() < _timeout){// (encoderGet(liftEnc)>25)?320:350)) {
+    while (encoderGet(swingEnc) > swingE - 350) {
       printf("Swing = %d - %d  -%d\n", encoderGet(swingEnc), swingE,
              swingE - 350);
       //  delay(10);
@@ -204,8 +195,7 @@ void autoGrab2(void *ignore) {
     motorSet(3, 0);
     motorSet(2, -40);
     motorSet(6, -40);
-    _timeout = millis() + 1000;
-    while (encoderGet(liftEnc) > stacktop -3 && (millis() < _timeout)) {
+    while (encoderGet(liftEnc) > (stacktop > 10 ? stacktop - 5 : stacktop)) {
       //     delay(10);
     }
     motorSet(2, 0);

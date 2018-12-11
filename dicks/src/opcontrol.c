@@ -44,7 +44,7 @@ int gollastdir = 0;
     //  printf("Down \n");
   }else if (gollastdir == 1 )
     {
-        golspeed = -15;
+        golspeed = -25;
         //    printf("Lastdir 1 \n");
     }else if(autolift == true) {
         golspeed = -70;
