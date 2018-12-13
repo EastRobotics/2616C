@@ -1,37 +1,57 @@
 #include "main.h"
 
 /**
- * Runs the user autonomous code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the autonomous
- * mode. Alternatively, this function may be called in initialize or opcontrol
- * for non-competition testing purposes.
- *
- * If the robot is disabled or communications is lost, the autonomous task
- * will be stopped. Re-enabling the robot will restart the task, not re-start it
- * from where it left off.
+ * 2616C Turning Point proposed autonomous run from the Red Front Position
  */
 
 using namespace okapi;
 
+
+
+
+
+void autonomous()
+{
 Motor flywheelMotor = 1_mtr;
 Motor intakeMotor = 13_mtr;
 Motor indexerMotor = 2_mtr;
 Motor descorerMotor = 4_mtr;
 
-MotorGroup leftmotors({2, 4});
-MotorGroup rightmotors({-8, -10});
+MotorGroup leftmotors({12, 14});
+MotorGroup rightmotors({3 ,11});
+
 
 auto drive = ChassisControllerFactory::create(
     leftmotors, rightmotors,
     AbstractMotor::gearset::green,
     {4.125_in, 9.5_in});
 
-void autonomous()
-{
-intakeMotor.move(127);    
-drive.moveDistance(4_ft);
-pros::delay(100);
-drive.moveDistance(-4_ft);
+    
+    drive.setMaxVoltage(9000);
+    flywheelMotor.move(127);
+    intakeMotor.move(127);
 
+    drive.moveDistance(4_ft);
+    pros::delay(100);
+    drive.moveDistance(-4_ft);
+    drive.turnAngle(-90_deg);
+    drive.moveDistance(18_in);
+    pros::delay(200);
+
+    indexerMotor.moveRelative(360, 127);
+
+    pros::delay(500);
+    drive.moveDistance(18_in);
+    pros::delay(200);
+
+    indexerMotor.moveRelative(360, 127);
+    
+    pros::delay(500);
+    drive.turnAngle(-30_deg);
+    drive.moveDistance(18_in);
+    pros::delay(250);
+    drive.moveDistance(6_ft);
+    drive.turnAngle(-90_deg);
+    drive.moveDistance(12_in);
+    drive.moveDistance(6_ft);
 }

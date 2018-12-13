@@ -72,6 +72,40 @@ void opcontrol(void);
 #endif
 
 #ifdef __cplusplus
+
+
+// #ifndef cust2616
+// #define cust2616
+
+// Motor flywheelMotor = 1_mtr;
+// Motor intakeMotor = 13_mtr;
+// Motor indexerMotor = 2_mtr;
+// Motor descorerMotor = 4_mtr;
+
+// MotorGroup leftmotors({12, 14});
+// MotorGroup rightmotors({3 ,11});
+
+
+// auto drive = ChassisControllerFactory::create(
+//     leftmotors, rightmotors,
+//     AbstractMotor::gearset::green,
+//     {4.125_in, 9.5_in});
+
+
+
+// #endif
+// #ifdef cust2616
+// //class Motor;
+// //class ChassisControllerFactory;
+
+//     extern okapi::Motor flywheelMotor;
+//     extern okapi::Motor intakeMotor;
+//     extern okapi::Motor indexerMotor;
+//     extern okapi::Motor descorerMotor;
+ 
+//  extern okapi::ChassisControllerIntegrated drive;
+
+//#endif
 /**
  * You can add C++-only headers here
  */
@@ -80,13 +114,4 @@ void opcontrol(void);
 
 #endif  // _PROS_MAIN_H_
 
-
-
-#define MOTOR_DRIVE_FRONT_RIGHT 3
-#define MOTOR_DRIVE_FRONT_LEFT 14
-#define MOTOR_DRIVE_BACK_RIGHT 11
-#define MOTOR_DRIVE_BACK_LEFT 12
-#define MOTOR_INTAKE 13
-#define MOTOR_INDEXER 2
-#define MOTOR_FLYWHEEL 1
-#define MOTOR_DESCORER 4
+#include "2616C-TP.hpp"
