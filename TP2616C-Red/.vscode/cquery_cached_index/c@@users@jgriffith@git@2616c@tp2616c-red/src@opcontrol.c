@@ -76,7 +76,8 @@ void opcontrol() {
 	motor_set_gearing(MOTOR_INTAKE, E_MOTOR_GEARSET_18);
   motor_set_gearing(MOTOR_INDEXER, E_MOTOR_GEARSET_18);
 	motor_set_gearing(MOTOR_FLYWHEEL, E_MOTOR_GEARSET_36);
-
+  motor_set_reversed(13, 0);
+  motor_set_reversed(2, 0);
  
  		flywheel_go(120);
 	while(true) {
